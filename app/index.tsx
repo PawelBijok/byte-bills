@@ -1,18 +1,11 @@
-import { Link } from "expo-router"
-import { Text, View, useColorScheme } from "react-native"
+import { View } from "react-native"
+import "react-native-url-polyfill/auto"
+import Account from "../components/Account"
 
-export default function Home() {
-  const colorScheme = useColorScheme()
-  const isDark = colorScheme === "dark"
+export default function App() {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ color: isDark ? "white" : "black" }}>Home Screen</Text>
-      <Link
-        style={{ color: isDark ? "white" : "black" }}
-        href={{ pathname: "summary", params: { name: "Bacon" } }}
-      >
-        Go to Details
-      </Link>
+    <View>
+      <Account />
     </View>
   )
 }
