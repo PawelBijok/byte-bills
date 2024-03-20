@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { createClient } from '@supabase/supabase-js'
+import { Session, createClient } from '@supabase/supabase-js'
+import { router } from 'expo-router'
 import 'react-native-url-polyfill/auto'
 import { secrets } from '../secrets'
 
@@ -14,3 +15,25 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: false,
   },
 })
+
+
+export const initialize = (onFirstSessionChange: Function) => {
+    let sessionChanges = 0;
+
+    function handleSession(session: Session | null) {
+      if (session) {
+        router.replace("/home")
+      } else {
+        router.replace("/auth")
+
+
+      }
+      if(sessionChanges === 0) onFirstSessionChange()
+      sessionChanges += 1
+    }
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      handleSession(session)
+    })
+
+}
