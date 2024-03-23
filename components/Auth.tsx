@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { Alert, StyleSheet, View } from "react-native"
-import { Button, Input } from "react-native-elements"
+import { Input } from "react-native-elements"
 import { supabase } from "../lib/supabase"
-import { AppButton } from "./Button"
+import { AppButton } from "./ui/AppButton"
 
 export default function Auth() {
   const [email, setEmail] = useState("")
@@ -59,14 +59,13 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced]}>
-        <Button
-          title="Sign in"
-          style={styles.appButton}
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-        />
+        <AppButton
+          title="Sign up"
+          onPress={() => signUpWithEmail()}
+        ></AppButton>
       </View>
-      <AppButton title={"Sign up"} onPress={() => signUpWithEmail()} />
+      <View style={[styles.verticallySpaced]}></View>
+      <AppButton title={"Sign up"} onPress={() => console.log("XD")} />
     </View>
   )
 }
@@ -83,11 +82,5 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
-  },
-  appButton: {
-    backgroundColor: "#000",
-    borderRadius: 5,
-    padding: 10,
-    alignItems: "center",
   },
 })
