@@ -1,16 +1,18 @@
 import { StyleSheet } from "react-native"
 import { Button } from "react-native-elements"
-import { isDark } from "../../lib/themes"
+import { isDark } from "../../../lib/themes"
 
 type AppButtonProps = {
   title: string
   onPress: () => void
+  loading?: boolean
 }
 
 export const AppButton = (props: AppButtonProps) => {
   return (
     <Button
-      loading={false}
+      loading={props.loading}
+      loadingProps={{ color: isDark() ? "white" : "black" }}
       title={props.title}
       buttonStyle={[
         styles.appButton,

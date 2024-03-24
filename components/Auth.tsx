@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { Alert, StyleSheet, View } from "react-native"
-import { Input } from "react-native-elements"
 import { supabase } from "../lib/supabase"
-import { AppButton } from "./ui/AppButton"
+import { AppButton } from "./ui/buttons/AppButton"
+import { AppInput } from "./ui/inputs/AppInput"
 
 export default function Auth() {
   const [email, setEmail] = useState("")
@@ -38,34 +38,40 @@ export default function Auth() {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input
-          label="Email"
-          leftIcon={{ type: "font-awesome", name: "envelope" }}
-          onChangeText={(text) => setEmail(text)}
+        <AppInput
           value={email}
-          placeholder="email@address.com"
-          autoCapitalize={"none"}
+          placeholder="unique email"
+          onChangeText={(text) => setEmail(text)}
+          secureTextEntry={false}
+          label="Email"
+          keyboardType="email-address"
         />
       </View>
-      <View style={styles.verticallySpaced}>
-        <Input
-          label="Password"
-          leftIcon={{ type: "font-awesome", name: "lock" }}
-          onChangeText={(text) => setPassword(text)}
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <AppInput
           value={password}
+          placeholder="super secret password"
+          onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize={"none"}
+          label="Password"
+          keyboardType="visible-password"
         />
       </View>
-      <View style={[styles.verticallySpaced]}>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
         <AppButton
           title="Sign up"
           onPress={() => signUpWithEmail()}
+          loading={loading}
         ></AppButton>
       </View>
       <View style={[styles.verticallySpaced]}></View>
-      <AppButton title={"Sign up"} onPress={() => console.log("XD")} />
+      <AppButton
+        title={"Sign up"}
+        onPress={() => {
+          setLoading((loading) => !loading)
+        }}
+        loading={loading}
+      />
     </View>
   )
 }
