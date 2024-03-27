@@ -5,8 +5,10 @@ import {
   TextInput,
   View,
 } from "react-native"
-import { isDark } from "../../../lib/themes"
+import { errorColor, isDark, okColor, onBgColor } from "../../../lib/themes"
 import { DashedSpacer } from "../spacers/DashedSpacer"
+
+export type AppInputStatus = "initial" | "ok" | "error"
 type AppInputProps = {
   value?: string
   onChangeText?: (value: string) => void
@@ -14,18 +16,32 @@ type AppInputProps = {
   secureTextEntry?: boolean
   label?: string
   keyboardType?: KeyboardTypeOptions
+  status?: AppInputStatus
+  errorText?: string
 }
 export const AppInput = (props: AppInputProps) => {
+  let color = "white"
+  switch (props.status) {
+    case "ok":
+      color = okColor()
+      break
+    case "error":
+      color = errorColor()
+      break
+    case "initial" || undefined:
+      color = onBgColor()
+      break
+  }
   return (
     <View style={styles.input}>
-      <Text style={{ color: isDark() ? "white" : "black" }}>{props.label}</Text>
+      <Text style={{ color: color }}>{props.label}</Text>
       <TextInput
         style={{
           fontSize: 20,
           paddingBottom: 6,
           paddingHorizontal: 4,
           paddingTop: 10,
-          color: isDark() ? "white" : "black",
+          color: color,
         }}
         placeholderTextColor={isDark() ? "#999" : "#888"}
         keyboardType={props.keyboardType}
@@ -34,7 +50,7 @@ export const AppInput = (props: AppInputProps) => {
         placeholder={props.placeholder}
         secureTextEntry={props.secureTextEntry}
       />
-      <DashedSpacer />
+      <DashedSpacer color={color} />
     </View>
   )
 }

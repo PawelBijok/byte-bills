@@ -1,9 +1,9 @@
 import { View } from "react-native"
-import { isDark } from "../../../lib/themes"
 
 type DashedSpacerProps = {
   elements?: number
   elementHeight?: number
+  color?: string
 }
 
 export const DashedSpacer = (props: DashedSpacerProps) => {
@@ -22,7 +22,7 @@ export const DashedSpacer = (props: DashedSpacerProps) => {
           key={index}
           style={{
             height: props.elementHeight ?? 3,
-            backgroundColor: isDark() ? "white" : "black",
+            backgroundColor: props.color,
             flex: 1,
             margin: 5,
           }}

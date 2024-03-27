@@ -47,7 +47,7 @@ export default function Auth() {
           keyboardType="email-address"
         />
       </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+      {/* <View style={[styles.verticallySpaced, styles.mt20]}>
         <AppInput
           value={password}
           placeholder="super secret password"
@@ -56,7 +56,7 @@ export default function Auth() {
           label="Password"
           keyboardType="visible-password"
         />
-      </View>
+      </View> */}
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <AppButton
           title="Sign up"
