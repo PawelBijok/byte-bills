@@ -20,7 +20,7 @@ type AppInputProps = {
   errorText?: string
 }
 export const AppInput = (props: AppInputProps) => {
-  let color = "white"
+  let color = onBgColor()
   switch (props.status) {
     case "ok":
       color = okColor()
