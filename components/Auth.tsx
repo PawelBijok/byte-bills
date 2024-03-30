@@ -22,10 +22,9 @@ type AuthState = {
   password: string;
   passwordRepeat: string;
   loading: boolean;
-  emailStatus: AppInputStatus;
-  passwordStatus: AppInputStatus;
-  passwordRepeatStatus: AppInputStatus;
-
+  readonly emailStatus: () => AppInputStatus;
+  readonly passwordStatus: () => AppInputStatus;
+  readonly passwordRepeatStatus: () => AppInputStatus;
   readonly isValid: () => boolean;
 };
 
@@ -36,9 +35,24 @@ export default function Auth() {
     password: "",
     passwordRepeat: "",
     loading: false,
-    emailStatus: "initial",
-    passwordStatus: "initial",
-    passwordRepeatStatus: "initial",
+    emailStatus: function (): AppInputStatus {
+      if (!this.registering || this.email.length === 0) {
+        return "initial";
+      }
+      return validateEmail(this.email) ? "ok" : "error";
+    },
+    passwordStatus: function (): AppInputStatus {
+      if (!this.registering || this.password.length === 0) {
+        return "initial";
+      }
+      return validatePassword(this.password) ? "ok" : "error";
+    },
+    passwordRepeatStatus: function (): AppInputStatus {
+      if (this.password.length === 0 || this.passwordRepeat.length === 0) {
+        return "initial";
+      }
+      return this.passwordRepeat === this.password ? "ok" : "error";
+    },
     isValid: function (): boolean {
       if (this.registering) {
         return (
@@ -97,10 +111,9 @@ export default function Auth() {
             setState((state) => ({
               ...state,
               email: text,
-              emailStatus: validateEmail(text) ? "ok" : "error",
             }))
           }
-          status={state.emailStatus}
+          status={state.emailStatus()}
           secureTextEntry={false}
           label="Email"
           keyboardType="email-address"
@@ -115,13 +128,12 @@ export default function Auth() {
             setState((state) => ({
               ...state,
               password: text,
-              passwordStatus: validatePassword(text) ? "ok" : "error",
             }))
           }
           secureTextEntry={true}
           label="Password"
           keyboardType="visible-password"
-          status={state.passwordStatus}
+          status={state.passwordStatus()}
           errorText="Password must be at least 5 characters long."
         />
         {state.registering ? (
@@ -133,13 +145,12 @@ export default function Auth() {
               setState((state) => ({
                 ...state,
                 passwordRepeat: text,
-                passwordRepeatStatus: text === state.password ? "ok" : "error",
               }))
             }
             secureTextEntry={true}
             label="Repeat password"
             keyboardType="visible-password"
-            status={state.passwordRepeatStatus}
+            status={state.passwordRepeatStatus()}
             errorText="Password does not match."
           />
         ) : null}
