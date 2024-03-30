@@ -4,9 +4,11 @@ import Auth from "../../components/Auth";
 
 export default function AuthPage() {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Stack.Screen options={{ title: "Auth" }} />
-      <Auth />
+      <View style={{ flex: 1 }}>
+        <Auth />
+      </View>
     </View>
   );
 }

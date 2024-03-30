@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { supabase } from "../lib/supabase";
-import { AppButton } from "./ui/buttons/AppButton";
+import { FilledButton } from "./ui/buttons/FilledButton";
+import { TextButton } from "./ui/buttons/TextButton";
 import { AppInput, AppInputStatus } from "./ui/inputs/AppInput";
 
 const validateEmail = (email: string): boolean => {
@@ -14,6 +15,7 @@ const validatePassword = (password: string): boolean => {
 };
 
 type AuthState = {
+  registering: boolean;
   email: string;
   password: string;
   loading: boolean;
@@ -24,6 +26,7 @@ type AuthState = {
 
 export default function Auth() {
   const initialState: AuthState = {
+    registering: false,
     email: "",
     password: "",
     loading: false,
@@ -67,8 +70,8 @@ export default function Auth() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+    <View style={[styles.container]}>
+      <View style={[styles.form]}>
         <AppInput
           value={state.email}
           placeholder="unique email"
@@ -86,8 +89,7 @@ export default function Auth() {
           keyboardType="email-address"
           errorText="Invalid email address."
         />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+
         <AppInput
           value={state.password}
           placeholder="super secret password"
@@ -105,19 +107,33 @@ export default function Auth() {
           status={state.passwordStatus}
           errorText="Password must be at least 5 characters long."
         />
+
+        {state.registering ? (
+          <FilledButton
+            title="Sign up"
+            onPress={signUpWithEmail}
+            loading={state.loading}
+          ></FilledButton>
+        ) : (
+          <FilledButton
+            title={"Sign in"}
+            onPress={signInWithEmail}
+            loading={state.loading}
+          />
+        )}
       </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}></View>
-      <AppButton
-        title={"Sign in"}
-        onPress={signInWithEmail}
-        loading={state.loading}
-      />
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <AppButton
-          title="Sign up"
-          onPress={signUpWithEmail}
+      <View style={[styles.flexSpace]}>
+        <TextButton
+          title={
+            state.registering
+              ? "Already have an account? Sign in"
+              : "Don't have an account? Register"
+          }
+          onPress={() =>
+            setState((state) => ({ ...state, registering: !state.registering }))
+          }
           loading={state.loading}
-        ></AppButton>
+        ></TextButton>
       </View>
     </View>
   );
@@ -125,15 +141,16 @@ export default function Auth() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    flex: 1,
     padding: 12,
   },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
+  form: {
+    marginTop: 30,
+    gap: 30,
   },
-  mt20: {
-    marginTop: 20,
+  flexSpace: {
+    flexGrow: 1,
+    justifyContent: "flex-end",
+    marginBottom: 40,
   },
 });

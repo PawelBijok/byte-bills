@@ -1,14 +1,14 @@
-import { StyleSheet } from "react-native"
-import { Button } from "react-native-elements"
-import { isDark } from "../../../lib/themes"
+import { StyleSheet } from "react-native";
+import { Button } from "react-native-elements";
+import { isDark } from "../../../lib/themes";
 
 type AppButtonProps = {
-  title: string
-  onPress: () => void
-  loading?: boolean
-}
+  title: string;
+  onPress: () => void;
+  loading?: boolean;
+};
 
-export const AppButton = (props: AppButtonProps) => {
+export const FilledButton = (props: AppButtonProps) => {
   return (
     <Button
       loading={props.loading}
@@ -21,8 +21,8 @@ export const AppButton = (props: AppButtonProps) => {
       titleStyle={[isDark() ? { color: "white" } : { color: "black" }]}
       onPress={props.onPress}
     />
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   appButton: {
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#222",
     borderColor: "white",
   },
-})
+});
