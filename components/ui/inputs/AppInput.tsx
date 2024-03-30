@@ -54,7 +54,13 @@ export const AppInput = (props: AppInputProps) => {
         placeholder={props.placeholder}
         secureTextEntry={props.secureTextEntry}
       />
-      <DashedSpacer color={color} />
+      <DashedSpacer
+        color={color}
+        spacerHeight={10}
+        elements={15}
+        elementHeight={2}
+        elementSpacing={8}
+      />
       {props.errorText != null && props.status == "error" ? (
         <Text style={{ color: color }}>{props.errorText}</Text>
       ) : null}

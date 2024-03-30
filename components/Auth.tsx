@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { supabase } from "../lib/supabase";
+import { onBgColor } from "../lib/themes";
 import { FilledButton } from "./ui/buttons/FilledButton";
 import { TextButton } from "./ui/buttons/TextButton";
 import { AppInput, AppInputStatus } from "./ui/inputs/AppInput";
+import { DashedSpacer } from "./ui/spacers/DashedSpacer";
 
 const validateEmail = (email: string): boolean => {
   const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -18,9 +20,12 @@ type AuthState = {
   registering: boolean;
   email: string;
   password: string;
+  passwordRepeat: string;
   loading: boolean;
   emailStatus: AppInputStatus;
   passwordStatus: AppInputStatus;
+  passwordRepeatStatus: AppInputStatus;
+
   readonly isValid: () => boolean;
 };
 
@@ -29,11 +34,20 @@ export default function Auth() {
     registering: false,
     email: "",
     password: "",
+    passwordRepeat: "",
     loading: false,
     emailStatus: "initial",
     passwordStatus: "initial",
+    passwordRepeatStatus: "initial",
     isValid: function (): boolean {
-      return validateEmail(this.email) && validatePassword(this.password);
+      if (this.registering) {
+        return (
+          validateEmail(this.email) &&
+          validatePassword(this.password) &&
+          this.password === this.passwordRepeat
+        );
+      }
+      return true;
     },
   };
   const [state, setState] = useState<AuthState>(initialState);
@@ -63,9 +77,12 @@ export default function Auth() {
       email: state.email,
       password: state.password,
     });
-    if (error) Alert.alert(error.message);
-    if (!session)
+    if (error) {
+      Alert.alert(error.message);
+    }
+    if (!session) {
       Alert.alert("Please check your inbox for email verification!");
+    }
     setState((state) => ({ ...state, loading: false }));
   }
 
@@ -107,6 +124,25 @@ export default function Auth() {
           status={state.passwordStatus}
           errorText="Password must be at least 5 characters long."
         />
+        {state.registering ? (
+          <AppInput
+            value={state.passwordRepeat}
+            placeholder="super secret password once again"
+            autoCapitalize="none"
+            onChangeText={(text) =>
+              setState((state) => ({
+                ...state,
+                passwordRepeat: text,
+                passwordRepeatStatus: text === state.password ? "ok" : "error",
+              }))
+            }
+            secureTextEntry={true}
+            label="Repeat password"
+            keyboardType="visible-password"
+            status={state.passwordRepeatStatus}
+            errorText="Password does not match."
+          />
+        ) : null}
 
         {state.registering ? (
           <FilledButton
@@ -123,6 +159,13 @@ export default function Auth() {
         )}
       </View>
       <View style={[styles.flexSpace]}>
+        <DashedSpacer
+          color={onBgColor()}
+          elements={25}
+          elementHeight={1}
+          elementSpacing={4}
+          spacerHeight={40}
+        />
         <TextButton
           title={
             state.registering
@@ -132,7 +175,6 @@ export default function Auth() {
           onPress={() =>
             setState((state) => ({ ...state, registering: !state.registering }))
           }
-          loading={state.loading}
         ></TextButton>
       </View>
     </View>
@@ -142,9 +184,9 @@ export default function Auth() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
   },
   form: {
+    margin: 12,
     marginTop: 30,
     gap: 30,
   },
