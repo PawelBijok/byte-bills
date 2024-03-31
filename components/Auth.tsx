@@ -16,19 +16,24 @@ const validatePassword = (password: string): boolean => {
   return password.length >= 5;
 };
 
+type AuthProps = {
+  onTypeChanged: (value: boolean) => void;
+};
+
 type AuthState = {
   registering: boolean;
   email: string;
   password: string;
   passwordRepeat: string;
   loading: boolean;
+} & {
   readonly emailStatus: () => AppInputStatus;
   readonly passwordStatus: () => AppInputStatus;
   readonly passwordRepeatStatus: () => AppInputStatus;
   readonly isValid: () => boolean;
 };
 
-export default function Auth() {
+export default function Auth(props: AuthProps) {
   const initialState: AuthState = {
     registering: false,
     email: "",
@@ -65,6 +70,11 @@ export default function Auth() {
     },
   };
   const [state, setState] = useState<AuthState>(initialState);
+
+  function onTypeChanged() {
+    props.onTypeChanged(!state.registering);
+    setState((state) => ({ ...state, registering: !state.registering }));
+  }
 
   async function signInWithEmail() {
     if (!state.isValid()) {
@@ -183,9 +193,7 @@ export default function Auth() {
               ? "Already have an account? Sign in"
               : "Don't have an account? Register"
           }
-          onPress={() =>
-            setState((state) => ({ ...state, registering: !state.registering }))
-          }
+          onPress={onTypeChanged}
         ></TextButton>
       </View>
     </View>
