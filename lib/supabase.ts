@@ -17,17 +17,11 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-export const initialize = (onFirstSessionChange: Function) => {
-  let sessionChanges = 0;
-
+export const initialize = (
+  onSessionChanged: (sesh: Session | null) => void,
+) => {
   function handleSession(session: Session | null) {
-    if (session) {
-      router.replace("/home");
-    } else {
-      router.replace("/auth");
-    }
-    if (sessionChanges === 0) onFirstSessionChange();
-    sessionChanges += 1;
+    onSessionChanged(session);
   }
 
   supabase.auth.onAuthStateChange((_event, session) => {

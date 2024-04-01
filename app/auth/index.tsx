@@ -38,6 +38,8 @@ export default function LandingPage() {
         <Text
           style={{
             fontSize: 64,
+            fontFamily: "Overpass-Regular",
+            fontWeight: "bold",
             color: onBgColor(),
           }}
         >
