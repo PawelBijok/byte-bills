@@ -32,7 +32,7 @@ export default function RootLayout() {
       }
       SplashScreen.hideAsync();
     }
-  }, [initialized, fontsLoaded, fontError]);
+  }, [initialized, fontsLoaded, fontError, session]);
 
   const colorScheme = useColorScheme();
 
