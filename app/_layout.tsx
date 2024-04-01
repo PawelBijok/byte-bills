@@ -10,6 +10,7 @@ import { Session } from "@supabase/supabase-js";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const colorScheme = useColorScheme();
   const [initialized, setInitialized] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   useMemo(() => {
@@ -19,8 +20,11 @@ export default function RootLayout() {
     });
   }, []);
 
-  const [fontsLoaded, fontError] = useFonts({
-    "Overpass-Regular": require("../assets/fonts/Overpass-Regular.ttf"),
+  const [fontsLoaded] = useFonts({
+    Overpass: require("../assets/fonts/Overpass-Regular.ttf"),
+    "Overpass-Bold": require("../assets/fonts/Overpass-Bold.ttf"),
+    "Overpass-Light": require("../assets/fonts/Overpass-Light.ttf"),
+    Pixelify: require("../assets/fonts/PixelifySans-Regular.ttf"),
   });
 
   useEffect(() => {
@@ -32,9 +36,7 @@ export default function RootLayout() {
       }
       SplashScreen.hideAsync();
     }
-  }, [initialized, fontsLoaded, fontError, session]);
-
-  const colorScheme = useColorScheme();
+  }, [initialized, fontsLoaded, session]);
 
   if (!fontsLoaded) {
     return null;

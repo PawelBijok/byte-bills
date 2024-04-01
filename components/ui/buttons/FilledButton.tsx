@@ -18,7 +18,10 @@ export const FilledButton = (props: AppButtonProps) => {
         styles.appButton,
         isDark() ? styles.appButtonDark : styles.appButtonLight,
       ]}
-      titleStyle={[isDark() ? { color: "white" } : { color: "black" }]}
+      titleStyle={[
+        isDark() ? { color: "white" } : { color: "black" },
+        { fontFamily: "Pixelify" },
+      ]}
       onPress={props.onPress}
     />
   );
