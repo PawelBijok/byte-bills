@@ -6,7 +6,7 @@ export default function HomeLayout() {
   return (
     <Tabs screenOptions={{ headerShown: false }}>
       <Tabs.Screen
-        name="index"
+        name="bills"
         options={{
           title: "Bills",
           tabBarIcon: ({ color }) => (
