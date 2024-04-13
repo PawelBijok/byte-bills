@@ -10,7 +10,10 @@ export const TextButton = (props: TextButtonProps) => {
     <Button
       title={props.title}
       type="clear"
-      titleStyle={[isDark() ? { color: "white" } : { color: "black" }]}
+      titleStyle={[
+        isDark() ? { color: "white" } : { color: "black" },
+        { fontFamily: "Pixelify" },
+      ]}
       onPress={props.onPress}
     />
   );

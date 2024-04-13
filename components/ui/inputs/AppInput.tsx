@@ -37,7 +37,9 @@ export const AppInput = (props: AppInputProps) => {
   }
   return (
     <View style={styles.input}>
-      <Text style={{ color: color }}>{props.label}</Text>
+      <Text style={{ color: color, fontFamily: "Pixelify" }}>
+        {props.label}
+      </Text>
       <TextInput
         style={{
           fontSize: 20,
@@ -45,6 +47,7 @@ export const AppInput = (props: AppInputProps) => {
           paddingHorizontal: 4,
           paddingTop: 10,
           color: color,
+          fontFamily: "Overpass-Bold",
         }}
         autoCapitalize={props.autoCapitalize}
         placeholderTextColor={isDark() ? "#999" : "#888"}
@@ -62,7 +65,9 @@ export const AppInput = (props: AppInputProps) => {
         elementSpacing={8}
       />
       {props.errorText != null && props.status == "error" ? (
-        <Text style={{ color: color }}>{props.errorText}</Text>
+        <Text style={{ color: color, fontFamily: "Overpass-Light" }}>
+          {props.errorText}
+        </Text>
       ) : null}
     </View>
   );

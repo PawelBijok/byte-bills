@@ -2,5 +2,11 @@ import { Stack } from "expo-router";
 import { View } from "react-native";
 
 export default function AuthLayout() {
-  return <Stack />;
+  return (
+    <Stack
+      screenOptions={{
+        headerTitleStyle: { fontFamily: "Pixelify", fontSize: 20 },
+      }}
+    />
+  );
 }
