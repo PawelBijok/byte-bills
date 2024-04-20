@@ -32,7 +32,7 @@ export default function LandingPage() {
           resizeMode: "contain",
         }}
       />
-      <SafeAreaView style={{ flex: 1, padding: 12 }} edges={["top"]}>
+      <SafeAreaView style={{ flex: 1, padding: 15 }} edges={["top"]}>
         <Gap size={70} />
 
         <Text

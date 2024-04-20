@@ -3,7 +3,11 @@ import { Slot, SplashScreen, router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { View, useColorScheme } from "react-native";
 import * as supabase from "../lib/supabase";
-import { DarkNavigationTheme, LightNavigationTheme } from "../lib/themes";
+import {
+  DarkNavigationTheme,
+  LightNavigationTheme,
+  fonts,
+} from "../lib/themes";
 import { useFonts } from "expo-font";
 import { Session } from "@supabase/supabase-js";
 
@@ -21,10 +25,10 @@ export default function RootLayout() {
   }, []);
 
   const [fontsLoaded] = useFonts({
-    Overpass: require("../assets/fonts/Overpass-Regular.ttf"),
-    "Overpass-Bold": require("../assets/fonts/Overpass-Bold.ttf"),
-    "Overpass-Light": require("../assets/fonts/Overpass-Light.ttf"),
-    Pixelify: require("../assets/fonts/PixelifySans-Regular.ttf"),
+    [fonts.overpass]: require("../assets/fonts/Overpass-Regular.ttf"),
+    [fonts.overpassBold]: require("../assets/fonts/Overpass-Bold.ttf"),
+    [fonts.overpassLight]: require("../assets/fonts/Overpass-Light.ttf"),
+    [fonts.pixelify]: require("../assets/fonts/PixelifySans-Regular.ttf"),
   });
 
   useEffect(() => {

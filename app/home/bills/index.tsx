@@ -1,9 +1,10 @@
-import { View, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Bills from "../../../components/pages/Bills";
 
 export default function BillsPage() {
   return (
-    <View>
-      <Text style={{ color: "yellow" }}>bills</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1, padding: 15 }}>
+      <Bills />
+    </SafeAreaView>
   );
 }

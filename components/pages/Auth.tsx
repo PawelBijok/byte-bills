@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import { supabase } from "../lib/supabase";
-import { onBgColor } from "../lib/themes";
-import { FilledButton } from "./ui/buttons/FilledButton";
-import { TextButton } from "./ui/buttons/TextButton";
-import { AppInput, AppInputStatus } from "./ui/inputs/AppInput";
-import { DashedSpacer } from "./ui/spacers/DashedSpacer";
+import { supabase } from "../../lib/supabase";
+import { onBgColor } from "../../lib/themes";
+import { FilledButton } from "../ui/buttons/FilledButton";
+import { TextButton } from "../ui/buttons/TextButton";
+import { AppInput, AppInputStatus } from "../ui/inputs/AppInput";
+import { DashedSpacer } from "../ui/spacers/DashedSpacer";
 
 const validateEmail = (email: string): boolean => {
   const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

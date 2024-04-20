@@ -1,52 +1,52 @@
-import { Session } from "@supabase/supabase-js"
-import { useEffect, useState } from "react"
-import { Alert, StyleSheet, View } from "react-native"
-import { Button, Input } from "react-native-elements"
-import { supabase } from "../lib/supabase"
+import { Session } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import { Alert, StyleSheet, View } from "react-native";
+import { Button, Input } from "react-native-elements";
+import { supabase } from "../../lib/supabase";
 
 export default function Account() {
-  const [loading, setLoading] = useState(true)
-  const [username, setUsername] = useState("")
-  const [website, setWebsite] = useState("")
-  const [avatarUrl, setAvatarUrl] = useState("")
-  const [session, setSession] = useState<Session | null>(null)
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState("");
+  const [website, setWebsite] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
+      setSession(session);
       if (session) {
-        getProfile(session)
+        getProfile(session);
       } else {
-        supabase.auth.signOut()
+        supabase.auth.signOut();
       }
-    })
-  }, [])
+    });
+  }, []);
 
   async function getProfile(session: Session) {
     try {
-      setLoading(true)
-      if (!session?.user) throw new Error("No user on the session!")
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
 
       const { data, error, status } = await supabase
         .from("profiles")
         .select(`username, website, avatar_url`)
         .eq("id", session?.user.id)
-        .single()
+        .single();
       if (error && status !== 406) {
-        throw error
+        throw error;
       }
 
       if (data) {
-        setUsername(data.username)
-        setWebsite(data.website)
-        setAvatarUrl(data.avatar_url)
+        setUsername(data.username);
+        setWebsite(data.website);
+        setAvatarUrl(data.avatar_url);
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message)
+        Alert.alert(error.message);
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -55,13 +55,13 @@ export default function Account() {
     website,
     avatar_url,
   }: {
-    username: string
-    website: string
-    avatar_url: string
+    username: string;
+    website: string;
+    avatar_url: string;
   }) {
     try {
-      setLoading(true)
-      if (!session?.user) throw new Error("No user on the session!")
+      setLoading(true);
+      if (!session?.user) throw new Error("No user on the session!");
 
       const updates = {
         id: session?.user.id,
@@ -69,19 +69,19 @@ export default function Account() {
         website,
         avatar_url,
         updated_at: new Date(),
-      }
+      };
 
-      const { error } = await supabase.from("profiles").upsert(updates)
+      const { error } = await supabase.from("profiles").upsert(updates);
 
       if (error) {
-        throw error
+        throw error;
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message)
+        Alert.alert(error.message);
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -119,7 +119,7 @@ export default function Account() {
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -135,4 +135,4 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-})
+});

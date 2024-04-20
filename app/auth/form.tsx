@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { Text, View } from "react-native";
-import Auth from "../../components/Auth";
+import Auth from "../../components/pages/Auth";
 import { useState } from "react";
 
 export default function AuthPage() {
