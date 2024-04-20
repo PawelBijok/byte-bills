@@ -24,6 +24,7 @@ export const okColor = (): string => (isDark() ? "#ACF6BC" : "#17661F");
 
 export const errorColor = (): string => (isDark() ? "#AA5C5C" : "#D77474");
 export const accentColor = (): string => (isDark() ? "#7F6EE4" : "#7663EE");
+export const onAccentColor = (): string => (isDark() ? "#000000" : "#ffffff");
 
 export const fonts = {
   overpassBold: "Overpass-Bold",

@@ -1,8 +1,30 @@
 import { View } from "react-native";
 
 type GapProps = {
-  size?: number;
+  customSize?: number;
+  size?: "s" | "m" | "l";
 };
 export const Gap = (props: GapProps) => {
-  return <View style={{ height: props.size, width: props.size }} />;
+  let size = 0;
+
+  if (props.customSize) {
+    size = props.customSize;
+  } else {
+    switch (props.size) {
+      case "s":
+        size = 5;
+        break;
+      case "m":
+        size = 10;
+        break;
+      case "l":
+        size = 15;
+        break;
+      default:
+        size = 0;
+        break;
+    }
+  }
+
+  return <View style={{ height: size, width: size }} />;
 };

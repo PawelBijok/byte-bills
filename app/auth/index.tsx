@@ -33,7 +33,7 @@ export default function LandingPage() {
         }}
       />
       <SafeAreaView style={{ flex: 1, padding: 15 }} edges={["top"]}>
-        <Gap size={70} />
+        <Gap customSize={70} />
 
         <Text
           style={{
@@ -44,7 +44,7 @@ export default function LandingPage() {
         >
           Byte Bills
         </Text>
-        <Gap size={60} />
+        <Gap customSize={60} />
         <FilledButton
           title="Get Started"
           onPress={() => {
