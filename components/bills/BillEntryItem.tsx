@@ -1,17 +1,18 @@
-import { View, Text } from "react-native";
-import { fonts, onBgColor } from "../../lib/themes";
-import TextTag from "../ui/text/TextTag";
-import { Gap } from "../ui/common/Gap";
+import { Text, View } from "react-native"
+import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes"
+import { Gap } from "../ui/common/Gap"
+import TextTag from "../ui/text/TextTag"
 
 export default function BillEntryItem() {
-  let textColor = onBgColor();
+  let textColor = onBgColor()
+  let borderColor = onBgSubtleColor()
   return (
     <View
       style={{
-        borderColor: textColor,
-        borderRadius: 10,
+        borderColor: borderColor,
         borderWidth: 2,
         padding: 10,
+        borderStyle: "dashed",
       }}
     >
       <View
@@ -44,10 +45,10 @@ export default function BillEntryItem() {
         }}
       >
         <TextTag title="Groceries" />
-        <TextTag title="Alkohol" />
+        <TextTag title="Alcohol" />
         <TextTag title="Utils" />
         <TextTag title="Home" />
       </View>
     </View>
-  );
+  )
 }

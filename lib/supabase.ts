@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Session, createClient } from "@supabase/supabase-js";
-import { router } from "expo-router";
 import { AppState } from "react-native";
 import "react-native-url-polyfill/auto";
 import { secrets } from "../secrets";

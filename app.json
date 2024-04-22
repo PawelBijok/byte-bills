@@ -32,6 +32,7 @@
           "fonts": [
             "assets/fonts/Overpass-Regular.ttf",
             "assets/fonts/Overpass-Bold.ttf",
+            "assets/fonts/Overpass-Black.ttf",
             "assets/fonts/Overpass-Light.ttf",
             "assets/fonts/PixelifySans-Regular.ttf"
           ]
