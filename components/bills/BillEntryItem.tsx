@@ -13,6 +13,7 @@ export default function BillEntryItem() {
         borderWidth: 2,
         padding: 10,
         borderStyle: "dashed",
+        borderRadius: 5
       }}
     >
       <View
@@ -29,7 +30,7 @@ export default function BillEntryItem() {
             fontFamily: fonts.overpassBold,
           }}
         >
-          187,23 pln
+          420,23 pln
         </Text>
         <Text style={{ color: textColor, fontFamily: fonts.pixelify }}>
           2024-04-20

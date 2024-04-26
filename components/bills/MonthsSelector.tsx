@@ -3,7 +3,14 @@ import React from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 import { fonts, onBgColor } from "../../lib/themes"
 
-export default function MonthsSelector() {
+type MonthSelectorProsp = {
+
+  month: string;
+  year: number;
+  onPrevious: ()=>void;
+  onNext: ()=>void;
+}
+export default function MonthsSelector(props:MonthSelectorProsp) {
   let color = onBgColor()
   return (
     <View
@@ -14,22 +21,18 @@ export default function MonthsSelector() {
       }}
     >
       <TouchableOpacity
-        onPress={() => {
-          console.log("left")
-        }}
+        onPress={props.onPrevious}
       >
         <View style={{ paddingHorizontal: 5 }}>
           <Octicons name="chevron-left" size={30} color={color} />
         </View>
       </TouchableOpacity>
       <Text style={{ color, fontFamily: fonts.pixelify, fontSize: 20 }}>
-        April 2024
+        {props.month} {props.year}
       </Text>
 
       <TouchableOpacity
-        onPress={() => {
-          console.log("right")
-        }}
+        onPress={props.onNext}
       >
         <View style={{ paddingHorizontal: 5 }}>
           <Octicons name="chevron-right" size={30} color={color} />
