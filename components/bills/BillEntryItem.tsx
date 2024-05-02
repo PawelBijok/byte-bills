@@ -2,8 +2,14 @@ import { Text, View } from "react-native"
 import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes"
 import { Gap } from "../ui/common/Gap"
 import TextTag from "../ui/text/TextTag"
+import { Bill, getFullAmount } from "../../types/bill"
+import moment from "moment"
 
-export default function BillEntryItem() {
+type BillEntryItemProps = {
+  bill: Bill;
+}
+
+export default function BillEntryItem(props: BillEntryItemProps) {
   let textColor = onBgColor()
   let borderColor = onBgSubtleColor()
   return (
@@ -30,10 +36,10 @@ export default function BillEntryItem() {
             fontFamily: fonts.overpassBold,
           }}
         >
-          420,23 pln
+          {`${getFullAmount(props.bill)} ${props.bill.currency}`}
         </Text>
         <Text style={{ color: textColor, fontFamily: fonts.pixelify }}>
-          2024-04-20
+          {moment(props.bill.date).format("DD-MM-YYYY")}
         </Text>
       </View>
       <Gap size="s" />
@@ -45,10 +51,11 @@ export default function BillEntryItem() {
           rowGap: 2,
         }}
       >
-        <TextTag title="Groceries" />
-        <TextTag title="Alcohol" />
-        <TextTag title="Utils" />
-        <TextTag title="Home" />
+        {
+          props.bill.categories.map((cat) =>
+            <TextTag title={cat.name} />
+          )
+        }
       </View>
     </View>
   )

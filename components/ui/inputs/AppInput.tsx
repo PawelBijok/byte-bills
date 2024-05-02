@@ -20,6 +20,7 @@ type AppInputProps = {
   status?: AppInputStatus;
   errorText?: string;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
+  widthFraction?: number,
 };
 
 export const AppInput = (props: AppInputProps) => {
@@ -60,7 +61,7 @@ export const AppInput = (props: AppInputProps) => {
       <DashedSpacer
         color={color}
         spacerHeight={10}
-        elements={15}
+        elements={Math.round(15 * (props.widthFraction ?? 1))}
         elementHeight={2}
         elementSpacing={8}
       />

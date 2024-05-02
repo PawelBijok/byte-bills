@@ -2,10 +2,18 @@ import { StyleSheet } from "react-native";
 import { Button } from "react-native-elements";
 import { isDark } from "../../../lib/themes";
 
+type ButtonIcon = {
+  name: string;
+  type: string;
+  size: number;
+}
+
 type AppButtonProps = {
   title: string;
-  onPress: () => void;
+  onPress?: () => void;
   loading?: boolean;
+  icon?: ButtonIcon;
+  iconRight?: boolean;
 };
 
 export const FilledButton = (props: AppButtonProps) => {
@@ -14,7 +22,10 @@ export const FilledButton = (props: AppButtonProps) => {
       loading={props.loading}
       loadingProps={{ color: isDark() ? "white" : "black" }}
       title={props.title}
+      icon={props.icon ? { ...props.icon!, color: isDark() ? "white" : "black" } : undefined}
+      iconRight={props.iconRight}
       buttonStyle={[
+
         styles.appButton,
         isDark() ? styles.appButtonDark : styles.appButtonLight,
       ]}

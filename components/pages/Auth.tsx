@@ -40,25 +40,25 @@ export default function Auth(props: AuthProps) {
     password: "",
     passwordRepeat: "",
     loading: false,
-    emailStatus: function (): AppInputStatus {
+    emailStatus: function(): AppInputStatus {
       if (!this.registering || this.email.length === 0) {
         return "initial";
       }
       return validateEmail(this.email) ? "ok" : "error";
     },
-    passwordStatus: function (): AppInputStatus {
+    passwordStatus: function(): AppInputStatus {
       if (!this.registering || this.password.length === 0) {
         return "initial";
       }
       return validatePassword(this.password) ? "ok" : "error";
     },
-    passwordRepeatStatus: function (): AppInputStatus {
+    passwordRepeatStatus: function(): AppInputStatus {
       if (this.password.length === 0 || this.passwordRepeat.length === 0) {
         return "initial";
       }
       return this.passwordRepeat === this.password ? "ok" : "error";
     },
-    isValid: function (): boolean {
+    isValid: function(): boolean {
       if (this.registering) {
         return (
           validateEmail(this.email) &&

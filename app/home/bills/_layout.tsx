@@ -10,7 +10,6 @@ export default function Layout() {
     <Stack.Screen
       name="index"
       options={{
-        // Hide the header for all other routes.
         headerShown: false,
       }}
     />
