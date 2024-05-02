@@ -4,13 +4,15 @@ import MonthSummary from "../bills/MonthSummary"
 import MonthsSelector from "../bills/MonthsSelector"
 import { Gap } from "../ui/common/Gap"
 import { useState } from "react"
+import { FilledButton } from "../ui/buttons/FilledButton"
+import { router } from "expo-router"
 
 export default function Bills() {
   let now = new Date()
   const currentYear = now.getFullYear()
   const currentMonth = now.getMonth()
 
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemer", "December"]
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "Novemer", "December",]
 
   const [month, setMonth] = useState<number>(currentMonth)
   const [year, setYear] = useState<number>(currentYear)
@@ -24,7 +26,6 @@ export default function Bills() {
         setYear(currentYear + 1)
       }
       else {
-
         setMonth(currentMonth + 1)
       }
     }
@@ -59,8 +60,15 @@ export default function Bills() {
         >
           <BillEntryItem />
           <BillEntryItem />
+
           <BillEntryItem />
         </View>
+
+        <FilledButton title="Add new bill" onPress={() => {
+
+          router.push("/home/bills/new")
+        }} loading={false} />
+        <Gap size="l" />
         <MonthSummary />
       </View>
     </SafeAreaView>

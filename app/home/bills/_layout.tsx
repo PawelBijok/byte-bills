@@ -1,5 +1,21 @@
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 
-export default function BillsLayout() {
-  return <Slot />;
+export default function Layout() {
+  return (<Stack>
+    <Stack.Screen
+      name="index"
+      options={{
+        // Hide the header for all other routes.
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="new"
+      options={{
+        presentation: 'modal',
+        title: "Add new bill"
+      }}
+    />
+  </Stack >);
+
 }
