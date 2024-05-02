@@ -1,7 +1,12 @@
 import { Stack } from "expo-router";
 
 export default function Layout() {
-  return (<Stack>
+  return (<Stack
+
+    screenOptions={{
+      headerTitleStyle: { fontFamily: "Pixelify", fontSize: 20 },
+    }}
+  >
     <Stack.Screen
       name="index"
       options={{
