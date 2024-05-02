@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { onBgColor } from "../../lib/themes";
 
-export default function AddBill() {
+export default function AddNewBill() {
   return <View><Text style={{ color: onBgColor() }}>
     We'll be implementing addition here
   </Text></View>

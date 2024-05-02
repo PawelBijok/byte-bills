@@ -1,7 +1,7 @@
 import { View } from "react-native";
-import AddBill from "../../../components/pages/AddBills";
+import AddNewBill from "../../../components/pages/AddNewBill";
 
 export default function NewBillPage() {
-  return <AddBill />
+  return <AddNewBill />
 
 }
