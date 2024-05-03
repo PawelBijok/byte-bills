@@ -8,13 +8,12 @@ export type Bill = {
 export type Category = {
   value: number;
   name: string;
-}
+};
 
 export function getFullAmount(bill: Bill): number {
   let amount = 0;
   bill.categories.forEach((cat) => {
-    amount += cat.value
-  })
-  return amount
-
+    amount += cat.value;
+  });
+  return amount;
 }

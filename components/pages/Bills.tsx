@@ -68,7 +68,7 @@ export default function Bills() {
         <FlatList data={bills}
           ItemSeparatorComponent={() => <Gap size="l" />}
           renderItem={({ item }) => <BillEntryItem bill={item} />}
-
+          keyExtractor={item => item.id}
         />
 
         <FilledButton title="Add new bill" onPress={() => {

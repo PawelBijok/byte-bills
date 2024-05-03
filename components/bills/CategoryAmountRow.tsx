@@ -4,7 +4,7 @@ import { AppInput } from '../ui/inputs/AppInput';
 
 type CategoryAmountRowProps = {
   categoryName?: string;
-  amount?: number;
+  amount?: string;
   onNameChanged: (name: string) => void;
   onAmountChanged: (value: string) => void;
 }

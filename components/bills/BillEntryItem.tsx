@@ -2,7 +2,7 @@ import { Text, View } from "react-native"
 import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes"
 import { Gap } from "../ui/common/Gap"
 import TextTag from "../ui/text/TextTag"
-import { Bill, getFullAmount } from "../../types/bill"
+import { Bill, Category, getFullAmount } from "../../types/bill"
 import moment from "moment"
 
 type BillEntryItemProps = {
@@ -12,6 +12,7 @@ type BillEntryItemProps = {
 export default function BillEntryItem(props: BillEntryItemProps) {
   let textColor = onBgColor()
   let borderColor = onBgSubtleColor()
+  const uniqueCategoriesNames: String[] = [...(new Set(props.bill.categories.map(e => e.name)))]
   return (
     <View
       style={{
@@ -52,8 +53,8 @@ export default function BillEntryItem(props: BillEntryItemProps) {
         }}
       >
         {
-          props.bill.categories.map((cat) =>
-            <TextTag title={cat.name} />
+          uniqueCategoriesNames.map((name) =>
+            <TextTag title={name} key={name} />
           )
         }
       </View>
