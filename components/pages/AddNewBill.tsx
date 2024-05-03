@@ -8,7 +8,7 @@ import { TextButton } from "../ui/buttons/TextButton";
 import { Gap } from "../ui/common/Gap";
 import CurrencySelector from "../ui/modals/CurrencySelector";
 import { DashedSpacer } from "../ui/spacers/DashedSpacer";
-import { onBgColor, onBgSubtleColor } from "../../lib/themes";
+import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes";
 
 type EditableCategory = {
   id: string;
@@ -68,28 +68,6 @@ export default function AddNewBill() {
     >
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text>Select currency</Text>
-        <TextButton
-          title={selectedCurrency}
-          onPress={() => {
-            setCurrencyPickerVisible((e) => !e);
-          }}
-        />
-      </View>
-      <DashedSpacer
-        elements={15}
-        elementHeight={1}
-        spacerHeight={20}
-        color={onBgSubtleColor()}
-      />
-      <Gap size="l" />
-      <View
-        style={{
           flexGrow: 1,
           gap: 15,
         }}
@@ -125,6 +103,10 @@ export default function AddNewBill() {
           )}
         />
       </View>
+      <SelectedCurrency
+        selectedCurrency={selectedCurrency}
+        onSelectPress={() => setCurrencyPickerVisible(true)}
+      />
 
       <FilledButton
         title="Save"
@@ -143,6 +125,45 @@ export default function AddNewBill() {
           setSelectedCurrency(currency);
         }}
       />
+    </View>
+  );
+}
+
+type SelectedCurrencyProps = {
+  selectedCurrency: string;
+  onSelectPress: () => void;
+};
+
+function SelectedCurrency(props: SelectedCurrencyProps) {
+  return (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: onBgColor(),
+            fontFamily: fonts.pixelify,
+          }}
+        >
+          Select currency
+        </Text>
+        <TextButton
+          title={props.selectedCurrency}
+          onPress={props.onSelectPress}
+        />
+      </View>
+      <DashedSpacer
+        elements={15}
+        elementHeight={1}
+        spacerHeight={20}
+        color={onBgSubtleColor()}
+      />
+      <Gap size="l" />
     </View>
   );
 }
