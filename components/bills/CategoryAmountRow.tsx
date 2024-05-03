@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
-import { onBgColor, onBgSubtleColor } from "../../lib/themes";
+import { accentColor, onBgColor, onBgSubtleColor } from "../../lib/themes";
 import { Gap } from "../ui/common/Gap";
 import { AppInput } from "../ui/inputs/AppInput";
 
@@ -57,7 +57,7 @@ export default function CategotyAmountRow(props: CategoryAmountRowProps) {
           <Feather
             name="minus-square"
             size={20}
-            color={props.enableDeleteButton ? onBgColor() : onBgSubtleColor()}
+            color={props.enableDeleteButton ? accentColor() : onBgSubtleColor()}
           />
         </View>
       </TouchableOpacity>

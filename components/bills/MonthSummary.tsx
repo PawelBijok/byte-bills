@@ -1,12 +1,16 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { Text, TouchableOpacity, View } from "react-native"
-import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes"
-import { Gap } from "../ui/common/Gap"
-import { DashedSpacer } from "../ui/spacers/DashedSpacer"
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Text, TouchableOpacity, View } from "react-native";
+import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes";
+import { Gap } from "../ui/common/Gap";
+import { DashedSpacer } from "../ui/spacers/DashedSpacer";
 
-export default function MonthSummary() {
-  let color = onBgColor()
-  let borderColor = onBgSubtleColor()
+type MonthSummaryProps = {
+  sum: number;
+  currency: string;
+};
+export default function MonthSummary(props: MonthSummaryProps) {
+  let color = onBgColor();
+  let borderColor = onBgSubtleColor();
   return (
     <View>
       <DashedSpacer
@@ -24,11 +28,11 @@ export default function MonthSummary() {
         }}
       >
         <Text style={{ color, fontSize: 25, fontFamily: fonts.overpassBlack }}>
-          561,69 pln
+          {`${props.sum} ${props.currency}`}
         </Text>
         <TouchableOpacity
           onPress={() => {
-            console.log("export month")
+            console.log("export month");
           }}
         >
           <View style={{ padding: 5 }}>
@@ -37,5 +41,5 @@ export default function MonthSummary() {
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 }

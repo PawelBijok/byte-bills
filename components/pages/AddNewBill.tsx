@@ -9,6 +9,8 @@ import { Gap } from "../ui/common/Gap";
 import CurrencySelector from "../ui/modals/CurrencySelector";
 import { DashedSpacer } from "../ui/spacers/DashedSpacer";
 import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes";
+import { Bill, Category } from "../../types/bill";
+import { useBillsDispatch } from "../../context/BillsContext";
 
 type EditableCategory = {
   id: string;
@@ -17,12 +19,39 @@ type EditableCategory = {
 };
 
 export default function AddNewBill() {
+  const billsDispatcher = useBillsDispatch();
   const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("pln");
   const freshCategory = { name: "", value: "", id: "1" };
   const [categories, setCategories] = useState<EditableCategory[]>([
     { ...freshCategory },
   ]);
+
+  const save = () => {
+    const billCategoties: Category[] = categories.map((category) => {
+      const value = parseFloat(category.value.replaceAll(",", "."));
+      return {
+        name: category.name,
+        value: value,
+      };
+    });
+
+    const bill: Bill = {
+      date: new Date(),
+      id: Crypto.randomUUID(),
+      currency: selectedCurrency,
+      categories: billCategoties,
+    };
+
+    billsDispatcher!({
+      type: "ADD",
+      bill: bill,
+    });
+
+    if (canDismiss) {
+      router.back();
+    }
+  };
 
   const updateCategoryName = (id: string, name: string) => {
     setCategories((oldCategories) => {
@@ -108,16 +137,7 @@ export default function AddNewBill() {
         onSelectPress={() => setCurrencyPickerVisible(true)}
       />
 
-      <FilledButton
-        title="Save"
-        onPress={
-          canDismiss
-            ? () => {
-                router.back();
-              }
-            : undefined
-        }
-      />
+      <FilledButton title="Save" onPress={save} />
       <CurrencySelector
         visible={currencyPickerVisible}
         onCurrencySelected={(currency) => {
