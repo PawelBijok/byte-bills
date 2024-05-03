@@ -29,10 +29,16 @@ export default function Bills() {
     "December",
   ];
 
-  const bills = useBills();
-  const sum = bills.map((bill) => getFullAmount(bill)).reduce((s, a) => s + a);
-
   const [month, setMonth] = useState<number>(currentMonth);
+  let bills = useBills().filter((bill) => {
+    return bill.date.getMonth() == month;
+  });
+
+  const sum =
+    bills.length > 0
+      ? bills.map((bill) => getFullAmount(bill)).reduce((s, a) => s + a)
+      : 0;
+
   const [year, setYear] = useState<number>(currentYear);
 
   function changeMonth(next: boolean) {

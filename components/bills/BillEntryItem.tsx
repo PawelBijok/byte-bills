@@ -1,18 +1,20 @@
-import { Text, View } from "react-native"
-import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes"
-import { Gap } from "../ui/common/Gap"
-import TextTag from "../ui/text/TextTag"
-import { Bill, Category, getFullAmount } from "../../types/bill"
-import moment from "moment"
+import { Text, View } from "react-native";
+import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes";
+import { Gap } from "../ui/common/Gap";
+import TextTag from "../ui/text/TextTag";
+import { Bill, Category, getFullAmount } from "../../types/bill";
+import moment from "moment";
 
 type BillEntryItemProps = {
   bill: Bill;
-}
+};
 
 export default function BillEntryItem(props: BillEntryItemProps) {
-  let textColor = onBgColor()
-  let borderColor = onBgSubtleColor()
-  const uniqueCategoriesNames: String[] = [...(new Set(props.bill.categories.map(e => e.name)))]
+  let textColor = onBgColor();
+  let borderColor = onBgSubtleColor();
+  const uniqueCategoriesNames: string[] = [
+    ...new Set(props.bill.categories.map((e) => e.name)),
+  ];
   return (
     <View
       style={{
@@ -20,7 +22,7 @@ export default function BillEntryItem(props: BillEntryItemProps) {
         borderWidth: 2,
         padding: 10,
         borderStyle: "dashed",
-        borderRadius: 5
+        borderRadius: 5,
       }}
     >
       <View
@@ -37,7 +39,7 @@ export default function BillEntryItem(props: BillEntryItemProps) {
             fontFamily: fonts.overpassBold,
           }}
         >
-          {`${getFullAmount(props.bill)} ${props.bill.currency}`}
+          {`${getFullAmount(props.bill).toFixed(2)} ${props.bill.currency}`}
         </Text>
         <Text style={{ color: textColor, fontFamily: fonts.pixelify }}>
           {moment(props.bill.date).format("DD-MM-YYYY")}
@@ -52,12 +54,10 @@ export default function BillEntryItem(props: BillEntryItemProps) {
           rowGap: 2,
         }}
       >
-        {
-          uniqueCategoriesNames.map((name) =>
-            <TextTag title={name} key={name} />
-          )
-        }
+        {uniqueCategoriesNames.map((name) => (
+          <TextTag title={name} key={name} />
+        ))}
       </View>
     </View>
-  )
+  );
 }

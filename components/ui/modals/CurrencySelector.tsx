@@ -5,6 +5,7 @@ import { useState } from "react";
 import { overlayBgColor, onBgColor } from "../../../lib/themes";
 import { FilledButton } from "../buttons/FilledButton";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import BottomModal from "./BottomModal";
 
 type CurrencySelectorProps = {
   visible: boolean;
@@ -12,48 +13,25 @@ type CurrencySelectorProps = {
 };
 export default function CurrencySelector(props: CurrencySelectorProps) {
   const [currency, setCurrency] = useState("pln");
-  const insets = useSafeAreaInsets();
   return (
-    <Modal animationType="slide" transparent={true} visible={props.visible}>
-      <View
+    <BottomModal
+      visible={props.visible}
+      onAccept={() => props.onCurrencySelected(currency)}
+    >
+      <Picker
+        mode="dialog"
+        selectedValue={currency}
         style={{
-          width: "100%",
-          backgroundColor: overlayBgColor(),
-          borderTopRightRadius: 18,
-          borderTopLeftRadius: 18,
-          position: "absolute",
-          shadowColor: onBgColor(),
-          shadowRadius: 15,
-          shadowOpacity: 0.1,
-          bottom: 0,
+          padding: 0,
+          margin: 0,
         }}
+        onValueChange={(itemValue, _) => setCurrency(itemValue)}
       >
-        <Picker
-          mode="dialog"
-          selectedValue={currency}
-          style={{
-            padding: 0,
-            margin: 0,
-          }}
-          onValueChange={(itemValue, _) => setCurrency(itemValue)}
-        >
-          {/* TODO: update curencies */}
-          <Picker.Item label="Polish złoty" color={onBgColor()} value="pln" />
-          <Picker.Item label="American dolar" color={onBgColor()} value="usd" />
-          <Picker.Item label="Euro" value="eur" color={onBgColor()} />
-        </Picker>
-        <View
-          style={{
-            paddingHorizontal: 30,
-            paddingBottom: insets.bottom,
-          }}
-        >
-          <FilledButton
-            title="Ok"
-            onPress={() => props.onCurrencySelected(currency)}
-          />
-        </View>
-      </View>
-    </Modal>
+        {/* TODO: update curencies */}
+        <Picker.Item label="Polish złoty" color={onBgColor()} value="pln" />
+        <Picker.Item label="American dolar" color={onBgColor()} value="usd" />
+        <Picker.Item label="Euro" value="eur" color={onBgColor()} />
+      </Picker>
+    </BottomModal>
   );
 }

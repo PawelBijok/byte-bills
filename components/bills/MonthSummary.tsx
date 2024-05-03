@@ -28,7 +28,7 @@ export default function MonthSummary(props: MonthSummaryProps) {
         }}
       >
         <Text style={{ color, fontSize: 25, fontFamily: fonts.overpassBlack }}>
-          {`${props.sum} ${props.currency}`}
+          {`${props.sum.toFixed(2)} ${props.currency}`}
         </Text>
         <TouchableOpacity
           onPress={() => {

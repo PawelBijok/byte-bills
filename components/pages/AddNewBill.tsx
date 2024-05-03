@@ -11,6 +11,8 @@ import { DashedSpacer } from "../ui/spacers/DashedSpacer";
 import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes";
 import { Bill, Category } from "../../types/bill";
 import { useBillsDispatch } from "../../context/BillsContext";
+import moment from "moment";
+import DateSelector from "../ui/modals/DateSelector";
 
 type EditableCategory = {
   id: string;
@@ -22,6 +24,8 @@ export default function AddNewBill() {
   const billsDispatcher = useBillsDispatch();
   const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState("pln");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
   const freshCategory = { name: "", value: "", id: "1" };
   const [categories, setCategories] = useState<EditableCategory[]>([
     { ...freshCategory },
@@ -37,7 +41,7 @@ export default function AddNewBill() {
     });
 
     const bill: Bill = {
-      date: new Date(),
+      date: selectedDate,
       id: Crypto.randomUUID(),
       currency: selectedCurrency,
       categories: billCategoties,
@@ -136,6 +140,10 @@ export default function AddNewBill() {
         selectedCurrency={selectedCurrency}
         onSelectPress={() => setCurrencyPickerVisible(true)}
       />
+      <SelectDateTime
+        selectedDate={selectedDate}
+        onSelectPress={() => setDatePickerVisible(true)}
+      />
 
       <FilledButton title="Save" onPress={save} />
       <CurrencySelector
@@ -143,6 +151,13 @@ export default function AddNewBill() {
         onCurrencySelected={(currency) => {
           setCurrencyPickerVisible(false);
           setSelectedCurrency(currency);
+        }}
+      />
+      <DateSelector
+        visible={datePickerVisible}
+        onDateSelected={(date) => {
+          setDatePickerVisible(false);
+          setSelectedDate(date);
         }}
       />
     </View>
@@ -174,6 +189,45 @@ function SelectedCurrency(props: SelectedCurrencyProps) {
         </Text>
         <TextButton
           title={props.selectedCurrency}
+          onPress={props.onSelectPress}
+        />
+      </View>
+      <DashedSpacer
+        elements={15}
+        elementHeight={1}
+        spacerHeight={20}
+        color={onBgSubtleColor()}
+      />
+      <Gap size="l" />
+    </View>
+  );
+}
+
+type SelectedDateTimeProps = {
+  selectedDate: Date;
+  onSelectPress: () => void;
+};
+
+function SelectDateTime(props: SelectedDateTimeProps) {
+  return (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: onBgColor(),
+            fontFamily: fonts.pixelify,
+          }}
+        >
+          Select date
+        </Text>
+        <TextButton
+          title={moment(props.selectedDate).format("DD-MM-YYYY")}
           onPress={props.onSelectPress}
         />
       </View>

@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { Bill } from "../types/bill";
 
+//TODO: remove
 const bill: Bill = {
   id: "bill1",
   currency: "pln",
@@ -18,6 +19,7 @@ const bill: Bill = {
   ],
 };
 
+//TODO: remove
 const initialBills: Bill[] = [
   { ...bill },
   { ...bill, id: "bill2" },
