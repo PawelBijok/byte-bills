@@ -1,8 +1,9 @@
 import { ReactNode, createContext, useContext, useState } from "react";
-import { Currency, availableCurrencies } from "../types/currency";
+import { Currency } from "../types/currency";
 
 export type CurrencyState = {
   defaultCurrency: Currency;
+  availableCurrencies: Currency[];
   setDefaultCurrency: (currency: Currency) => void;
 };
 
@@ -21,6 +22,7 @@ export default function CurrencyProvider(props: CurrencyProviderProps) {
   const state: CurrencyState = {
     defaultCurrency: defaultCurency,
     setDefaultCurrency: setDefaultCurency,
+    availableCurrencies: availableCurrencies,
   };
 
   return (
@@ -32,3 +34,21 @@ export default function CurrencyProvider(props: CurrencyProviderProps) {
 export function useCurrency() {
   return useContext(CurrencyContext);
 }
+
+const availableCurrencies: Currency[] = [
+  { id: "0", name: "Polish Złoty", shortName: "pln" },
+  {
+    id: "1",
+    name: "American Dolar",
+    shortName: "usd",
+    symbol: "$",
+    symbolInFront: true,
+  },
+  {
+    id: "2",
+    name: "Euro",
+    shortName: "eur",
+    symbol: "€",
+    symbolInFront: false,
+  },
+];

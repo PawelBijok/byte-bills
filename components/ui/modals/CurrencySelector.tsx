@@ -6,7 +6,8 @@ import { overlayBgColor, onBgColor } from "../../../lib/themes";
 import { FilledButton } from "../buttons/FilledButton";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BottomModal from "./BottomModal";
-import { Currency, availableCurrencies } from "../../../types/currency";
+import { Currency } from "../../../types/currency";
+import { useCurrency } from "../../../context/CurrencyContext";
 
 type CurrencySelectorProps = {
   visible: boolean;
@@ -15,6 +16,7 @@ type CurrencySelectorProps = {
   onCancel?: () => void;
 };
 export default function CurrencySelector(props: CurrencySelectorProps) {
+  const availableCurrencies = useCurrency()!.availableCurrencies;
   const [currency, setCurrency] = useState<string>(
     props.initialValue?.id ?? availableCurrencies[0].id,
   );
