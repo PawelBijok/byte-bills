@@ -5,6 +5,7 @@ import { Button, Input } from "react-native-elements";
 import { supabase } from "../../lib/supabase";
 import LabelButtonRow from "../ui/buttons/LabelButtonRow";
 import CurrencySelector from "../ui/modals/CurrencySelector";
+import { useCurrency } from "../../context/CurrencyContext";
 
 export default function Account() {
   const [loading, setLoading] = useState(true);
@@ -12,8 +13,9 @@ export default function Account() {
   const [website, setWebsite] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [session, setSession] = useState<Session | null>(null);
-  const [defaultCurrency, setDefaultCurrency] = useState("pln");
   const [currencyModalShown, setCurrencyModalShown] = useState(false);
+
+  const currencyContext = useCurrency()!;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -92,7 +94,7 @@ export default function Account() {
   return (
     <View style={styles.container}>
       <LabelButtonRow
-        buttonLabel={defaultCurrency}
+        buttonLabel={currencyContext.defaultCurrency.shortName}
         label="Default curency"
         onPress={() => setCurrencyModalShown(true)}
       />
@@ -129,10 +131,10 @@ export default function Account() {
       </View>
       <CurrencySelector
         visible={currencyModalShown}
-        initialValue={defaultCurrency}
+        initialValue={currencyContext.defaultCurrency}
         onCancel={() => setCurrencyModalShown(false)}
         onCurrencySelected={(currency) => {
-          setDefaultCurrency(currency);
+          currencyContext.setDefaultCurrency(currency);
           setCurrencyModalShown(false);
         }}
       />

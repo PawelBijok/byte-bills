@@ -6,19 +6,26 @@ import { overlayBgColor, onBgColor } from "../../../lib/themes";
 import { FilledButton } from "../buttons/FilledButton";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BottomModal from "./BottomModal";
+import { Currency, availableCurrencies } from "../../../types/currency";
 
 type CurrencySelectorProps = {
   visible: boolean;
-  initialValue?: string;
-  onCurrencySelected: (currency: string) => void;
+  initialValue?: Currency;
+  onCurrencySelected: (currency: Currency) => void;
   onCancel?: () => void;
 };
 export default function CurrencySelector(props: CurrencySelectorProps) {
-  const [currency, setCurrency] = useState(props.initialValue ?? "pln");
+  const [currency, setCurrency] = useState<string>(
+    props.initialValue?.id ?? availableCurrencies[0].id,
+  );
   return (
     <BottomModal
       visible={props.visible}
-      onAccept={() => props.onCurrencySelected(currency)}
+      onAccept={() =>
+        props.onCurrencySelected(
+          availableCurrencies.find((c) => c.id == currency)!,
+        )
+      }
       onBackdropPress={props.onCancel}
     >
       <Picker
@@ -30,10 +37,14 @@ export default function CurrencySelector(props: CurrencySelectorProps) {
         }}
         onValueChange={(itemValue, _) => setCurrency(itemValue)}
       >
-        {/* TODO: update curencies */}
-        <Picker.Item label="Polish złoty" color={onBgColor()} value="pln" />
-        <Picker.Item label="American dolar" color={onBgColor()} value="usd" />
-        <Picker.Item label="Euro" value="eur" color={onBgColor()} />
+        {availableCurrencies.map((currency) => (
+          <Picker.Item
+            label={currency.name}
+            color={onBgColor()}
+            value={currency.id}
+            key={currency.id}
+          />
+        ))}
       </Picker>
     </BottomModal>
   );

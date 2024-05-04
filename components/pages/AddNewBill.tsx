@@ -14,6 +14,8 @@ import { useBillsDispatch } from "../../context/BillsContext";
 import moment from "moment";
 import DateSelector from "../ui/modals/DateSelector";
 import LabelButtonRow from "../ui/buttons/LabelButtonRow";
+import { useCurrency } from "../../context/CurrencyContext";
+import { Currency } from "../../types/currency";
 
 type EditableCategory = {
   id: string;
@@ -22,9 +24,12 @@ type EditableCategory = {
 };
 
 export default function AddNewBill() {
+  const currencyContext = useCurrency()!;
   const billsDispatcher = useBillsDispatch();
   const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState("pln");
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(
+    currencyContext.defaultCurrency,
+  );
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const freshCategory = { name: "", value: "", id: "1" };
@@ -138,7 +143,7 @@ export default function AddNewBill() {
         />
       </View>
       <LabelButtonRow
-        buttonLabel={selectedCurrency}
+        buttonLabel={selectedCurrency.shortName}
         label="Select currency"
         onPress={() => setCurrencyPickerVisible(true)}
       />

@@ -6,11 +6,12 @@ import React, {
   useReducer,
 } from "react";
 import { Bill } from "../types/bill";
+import { availableCurrencies } from "../types/currency";
 
 //TODO: remove
 const bill: Bill = {
   id: "bill1",
-  currency: "pln",
+  currency: availableCurrencies[1],
   date: new Date(),
   categories: [
     { value: 13.9, name: "Alcohol" },

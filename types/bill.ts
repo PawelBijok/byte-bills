@@ -1,6 +1,8 @@
+import { Currency } from "./currency";
+
 export type Bill = {
   id: string;
-  currency: string;
+  currency: Currency;
   date: Date;
   categories: Category[];
 };
