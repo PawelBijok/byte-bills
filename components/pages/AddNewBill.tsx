@@ -13,6 +13,7 @@ import { Bill, Category } from "../../types/bill";
 import { useBillsDispatch } from "../../context/BillsContext";
 import moment from "moment";
 import DateSelector from "../ui/modals/DateSelector";
+import LabelButtonRow from "../ui/buttons/LabelButtonRow";
 
 type EditableCategory = {
   id: string;
@@ -136,18 +137,22 @@ export default function AddNewBill() {
           )}
         />
       </View>
-      <SelectedCurrency
-        selectedCurrency={selectedCurrency}
-        onSelectPress={() => setCurrencyPickerVisible(true)}
+      <LabelButtonRow
+        buttonLabel={selectedCurrency}
+        label="Select currency"
+        onPress={() => setCurrencyPickerVisible(true)}
       />
-      <SelectDateTime
-        selectedDate={selectedDate}
-        onSelectPress={() => setDatePickerVisible(true)}
+      <LabelButtonRow
+        buttonLabel={moment(selectedDate).format("DD-MM-YYYY")}
+        label="Select date"
+        onPress={() => setDatePickerVisible(true)}
       />
 
       <FilledButton title="Save" onPress={save} />
       <CurrencySelector
         visible={currencyPickerVisible}
+        initialValue={selectedCurrency}
+        onCancel={() => setCurrencyPickerVisible(false)}
         onCurrencySelected={(currency) => {
           setCurrencyPickerVisible(false);
           setSelectedCurrency(currency);
@@ -155,89 +160,12 @@ export default function AddNewBill() {
       />
       <DateSelector
         visible={datePickerVisible}
+        onCancel={() => setDatePickerVisible(false)}
         onDateSelected={(date) => {
           setDatePickerVisible(false);
           setSelectedDate(date);
         }}
       />
-    </View>
-  );
-}
-
-type SelectedCurrencyProps = {
-  selectedCurrency: string;
-  onSelectPress: () => void;
-};
-
-function SelectedCurrency(props: SelectedCurrencyProps) {
-  return (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            color: onBgColor(),
-            fontFamily: fonts.pixelify,
-          }}
-        >
-          Select currency
-        </Text>
-        <TextButton
-          title={props.selectedCurrency}
-          onPress={props.onSelectPress}
-        />
-      </View>
-      <DashedSpacer
-        elements={15}
-        elementHeight={1}
-        spacerHeight={20}
-        color={onBgSubtleColor()}
-      />
-      <Gap size="l" />
-    </View>
-  );
-}
-
-type SelectedDateTimeProps = {
-  selectedDate: Date;
-  onSelectPress: () => void;
-};
-
-function SelectDateTime(props: SelectedDateTimeProps) {
-  return (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            color: onBgColor(),
-            fontFamily: fonts.pixelify,
-          }}
-        >
-          Select date
-        </Text>
-        <TextButton
-          title={moment(props.selectedDate).format("DD-MM-YYYY")}
-          onPress={props.onSelectPress}
-        />
-      </View>
-      <DashedSpacer
-        elements={15}
-        elementHeight={1}
-        spacerHeight={20}
-        color={onBgSubtleColor()}
-      />
-      <Gap size="l" />
     </View>
   );
 }

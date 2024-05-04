@@ -9,14 +9,17 @@ import BottomModal from "./BottomModal";
 
 type CurrencySelectorProps = {
   visible: boolean;
+  initialValue?: string;
   onCurrencySelected: (currency: string) => void;
+  onCancel?: () => void;
 };
 export default function CurrencySelector(props: CurrencySelectorProps) {
-  const [currency, setCurrency] = useState("pln");
+  const [currency, setCurrency] = useState(props.initialValue ?? "pln");
   return (
     <BottomModal
       visible={props.visible}
       onAccept={() => props.onCurrencySelected(currency)}
+      onBackdropPress={props.onCancel}
     >
       <Picker
         mode="dialog"

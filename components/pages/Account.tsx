@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { supabase } from "../../lib/supabase";
+import LabelButtonRow from "../ui/buttons/LabelButtonRow";
+import CurrencySelector from "../ui/modals/CurrencySelector";
 
 export default function Account() {
   const [loading, setLoading] = useState(true);
@@ -10,6 +12,8 @@ export default function Account() {
   const [website, setWebsite] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [session, setSession] = useState<Session | null>(null);
+  const [defaultCurrency, setDefaultCurrency] = useState("pln");
+  const [currencyModalShown, setCurrencyModalShown] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -87,6 +91,11 @@ export default function Account() {
 
   return (
     <View style={styles.container}>
+      <LabelButtonRow
+        buttonLabel={defaultCurrency}
+        label="Default curency"
+        onPress={() => setCurrencyModalShown(true)}
+      />
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input label="Email" value={session?.user?.email} disabled />
       </View>
@@ -118,6 +127,15 @@ export default function Account() {
       <View style={styles.verticallySpaced}>
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
       </View>
+      <CurrencySelector
+        visible={currencyModalShown}
+        initialValue={defaultCurrency}
+        onCancel={() => setCurrencyModalShown(false)}
+        onCurrencySelected={(currency) => {
+          setDefaultCurrency(currency);
+          setCurrencyModalShown(false);
+        }}
+      />
     </View>
   );
 }
