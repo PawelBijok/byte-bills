@@ -1,9 +1,18 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Currency } from "../types/currency";
+import { supabase } from "../lib/supabase";
+import { Bill } from "../types/bill";
 
 export type CurrencyState = {
   defaultCurrency: Currency;
-  availableCurrencies: Currency[];
+  availableCurrencies: Currency[] | undefined;
   setDefaultCurrency: (currency: Currency) => void;
 };
 
@@ -18,11 +27,29 @@ export default function CurrencyProvider(props: CurrencyProviderProps) {
   const [defaultCurency, setDefaultCurency] = useState<Currency>(
     availableCurrencies[0],
   );
+  const [availableCurrencies2, setAvailableCurrencies] = useState<
+    Currency[] | undefined
+  >(undefined);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, error, status } = await supabase
+        .from("currencies")
+        .select("*");
+
+      const currencies = data as Currency[];
+      if (error !== null) {
+        return;
+      }
+      setAvailableCurrencies(currencies);
+    };
+    fetchData();
+  }, []);
 
   const state: CurrencyState = {
     defaultCurrency: defaultCurency,
     setDefaultCurrency: setDefaultCurency,
-    availableCurrencies: availableCurrencies,
+    availableCurrencies: availableCurrencies2,
   };
 
   return (

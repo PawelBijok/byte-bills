@@ -18,14 +18,14 @@ type CurrencySelectorProps = {
 export default function CurrencySelector(props: CurrencySelectorProps) {
   const availableCurrencies = useCurrency()!.availableCurrencies;
   const [currency, setCurrency] = useState<string>(
-    props.initialValue?.id ?? availableCurrencies[0].id,
+    props.initialValue?.id ?? availableCurrencies![0].id,
   );
   return (
     <BottomModal
       visible={props.visible}
       onAccept={() =>
         props.onCurrencySelected(
-          availableCurrencies.find((c) => c.id == currency)!,
+          availableCurrencies?.find((c) => c.id == currency)!,
         )
       }
       onBackdropPress={props.onCancel}
@@ -39,7 +39,7 @@ export default function CurrencySelector(props: CurrencySelectorProps) {
         }}
         onValueChange={(itemValue, _) => setCurrency(itemValue)}
       >
-        {availableCurrencies.map((currency) => (
+        {availableCurrencies?.map((currency) => (
           <Picker.Item
             label={currency.name}
             color={onBgColor()}
