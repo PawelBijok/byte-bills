@@ -3,9 +3,11 @@ import { Session, createClient } from "@supabase/supabase-js";
 import { AppState } from "react-native";
 import "react-native-url-polyfill/auto";
 import { secrets } from "../secrets";
+import { useState } from "react";
 
 const supabaseUrl = secrets.url;
 const supabaseAnonKey = secrets.apiKey;
+export let supabaseSession: Session | null;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -21,6 +23,7 @@ export const initialize = (
 ) => {
   function handleSession(session: Session | null) {
     onSessionChanged(session);
+    supabaseSession = session;
   }
 
   supabase.auth.onAuthStateChange((_event, session) => {

@@ -7,11 +7,10 @@ import {
   useState,
 } from "react";
 import { Currency } from "../types/currency";
-import { supabase } from "../lib/supabase";
-import { Bill } from "../types/bill";
+import { supabase, supabaseSession } from "../lib/supabase";
 
 export type CurrencyState = {
-  defaultCurrency: Currency;
+  defaultCurrency: Currency | undefined;
   availableCurrencies: Currency[] | undefined;
   setDefaultCurrency: (currency: Currency) => void;
 };
@@ -23,19 +22,17 @@ export const CurrencyContext = createContext<CurrencyState | undefined>(
 type CurrencyProviderProps = {
   children: ReactNode;
 };
-export default function CurrencyProvider(props: CurrencyProviderProps) {
-  const [defaultCurency, setDefaultCurency] = useState<Currency>(
-    availableCurrencies[0],
+export default function CurrencgProvider(props: CurrencyProviderProps) {
+  const [defaultCurency, setDefaultCurency] = useState<Currency | undefined>(
+    undefined,
   );
   const [availableCurrencies2, setAvailableCurrencies] = useState<
     Currency[] | undefined
   >(undefined);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data, error, status } = await supabase
-        .from("currencies")
-        .select("*");
+    const fetchAvailableCurrencies = async () => {
+      const { data, error } = await supabase.from("currencies").select("*");
 
       const currencies = data as Currency[];
       if (error !== null) {
@@ -43,12 +40,37 @@ export default function CurrencyProvider(props: CurrencyProviderProps) {
       }
       setAvailableCurrencies(currencies);
     };
-    fetchData();
+    const fetchDefaultCurrency = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("currency:currencies!inner(*)")
+        .eq("id", supabaseSession?.user.id)
+        .returns<{ currency: Currency }[]>()
+        .single();
+
+      if (error !== null || data === null) {
+        return;
+      }
+      setDefaultCurency(data.currency);
+    };
+    fetchAvailableCurrencies();
+    fetchDefaultCurrency();
   }, []);
+
+  const onSetDefaultCurrency = async (currency: Currency) => {
+    const { error } = await supabase
+      .from("profiles")
+      .update({ default_currency_id: currency.id })
+      .eq("id", supabaseSession!.user.id);
+    if (error !== null) {
+      return;
+    }
+    setDefaultCurency(currency);
+  };
 
   const state: CurrencyState = {
     defaultCurrency: defaultCurency,
-    setDefaultCurrency: setDefaultCurency,
+    setDefaultCurrency: onSetDefaultCurrency,
     availableCurrencies: availableCurrencies2,
   };
 
@@ -61,21 +83,3 @@ export default function CurrencyProvider(props: CurrencyProviderProps) {
 export function useCurrency() {
   return useContext(CurrencyContext);
 }
-
-const availableCurrencies: Currency[] = [
-  { id: "0", name: "Polish Złoty", shortName: "pln" },
-  {
-    id: "1",
-    name: "American Dolar",
-    shortName: "usd",
-    symbol: "$",
-    symbolInFront: true,
-  },
-  {
-    id: "2",
-    name: "Euro",
-    shortName: "eur",
-    symbol: "€",
-    symbolInFront: false,
-  },
-];

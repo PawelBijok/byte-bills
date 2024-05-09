@@ -1,13 +1,9 @@
-import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
-import { overlayBgColor, onBgColor } from "../../../lib/themes";
-import { FilledButton } from "../buttons/FilledButton";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import BottomModal from "./BottomModal";
-import { Currency } from "../../../types/currency";
 import { useCurrency } from "../../../context/CurrencyContext";
+import { onBgColor, overlayBgColor } from "../../../lib/themes";
+import { Currency } from "../../../types/currency";
+import BottomModal from "./BottomModal";
 
 type CurrencySelectorProps = {
   visible: boolean;

@@ -94,7 +94,7 @@ export default function Account() {
   return (
     <View style={styles.container}>
       <LabelButtonRow
-        buttonLabel={currencyContext.defaultCurrency.shortName}
+        buttonLabel={currencyContext.defaultCurrency?.shortName ?? "Loading"}
         label="Default curency"
         onPress={() => setCurrencyModalShown(true)}
       />
