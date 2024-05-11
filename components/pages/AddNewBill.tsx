@@ -28,7 +28,7 @@ export default function AddNewBill() {
   const billsDispatcher = useBillsDispatch();
   const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(
-    currencyContext.defaultCurrency,
+    currencyContext.defaultCurrency ?? currencyContext.availableCurrencies![0],
   );
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datePickerVisible, setDatePickerVisible] = useState(false);

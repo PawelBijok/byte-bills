@@ -1,18 +1,18 @@
-import { FlatList, SafeAreaView, View } from "react-native";
-import BillEntryItem from "../bills/BillEntryItem";
-import MonthSummary from "../bills/MonthSummary";
-import MonthsSelector from "../bills/MonthsSelector";
-import { Gap } from "../ui/common/Gap";
-import { useState } from "react";
-import { FilledButton } from "../ui/buttons/FilledButton";
-import { router } from "expo-router";
-import { Bill, getFullAmount } from "../../types/bill";
-import { useBills } from "../../context/BillsContext";
+import { router } from "expo-router"
+import { useState } from "react"
+import { FlatList, SafeAreaView, View } from "react-native"
+import { useBills } from "../../context/BillsContext"
+import { getFullAmount } from "../../types/bill"
+import BillEntryItem from "../bills/BillEntryItem"
+import MonthSummary from "../bills/MonthSummary"
+import MonthsSelector from "../bills/MonthsSelector"
+import { FilledButton } from "../ui/buttons/FilledButton"
+import { Gap } from "../ui/common/Gap"
 
 export default function Bills() {
-  let now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth();
+  let now = new Date()
+  const currentYear = now.getFullYear()
+  const currentMonth = now.getMonth()
 
   const months = [
     "January",
@@ -27,36 +27,36 @@ export default function Bills() {
     "October",
     "Novemer",
     "December",
-  ];
+  ]
 
-  const [month, setMonth] = useState<number>(currentMonth);
+  const [month, setMonth] = useState<number>(currentMonth)
   let bills = useBills().filter((bill) => {
-    return bill.date.getMonth() == month;
-  });
+    return bill.date.getMonth() == month
+  })
 
   const sum =
     bills.length > 0
       ? bills.map((bill) => getFullAmount(bill)).reduce((s, a) => s + a)
-      : 0;
+      : 0
 
-  const [year, setYear] = useState<number>(currentYear);
+  const [year, setYear] = useState<number>(currentYear)
 
   function changeMonth(next: boolean) {
-    const currentMonth = month;
-    const currentYear = year;
+    const currentMonth = month
+    const currentYear = year
     if (next) {
       if (currentMonth === months.length - 1) {
-        setMonth(0);
-        setYear(currentYear + 1);
+        setMonth(0)
+        setYear(currentYear + 1)
       } else {
-        setMonth(currentMonth + 1);
+        setMonth(currentMonth + 1)
       }
     } else {
       if (currentMonth === 0) {
-        setMonth(months.length - 1);
-        setYear(currentYear - 1);
+        setMonth(months.length - 1)
+        setYear(currentYear - 1)
       } else {
-        setMonth(currentMonth - 1);
+        setMonth(currentMonth - 1)
       }
     }
   }
@@ -67,10 +67,10 @@ export default function Bills() {
           month={months[month]}
           year={year}
           onPrevious={() => {
-            changeMonth(false);
+            changeMonth(false)
           }}
           onNext={() => {
-            changeMonth(true);
+            changeMonth(true)
           }}
         />
         <Gap size="xl" />
@@ -84,7 +84,7 @@ export default function Bills() {
         <FilledButton
           title="Add new bill"
           onPress={() => {
-            router.push("/home/bills/new");
+            router.push("/home/bills/new")
           }}
           icon={{
             name: "plus",
@@ -96,5 +96,5 @@ export default function Bills() {
         <MonthSummary currency="pln" sum={sum} />
       </View>
     </SafeAreaView>
-  );
+  )
 }

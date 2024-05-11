@@ -1,48 +1,79 @@
-import { Session, User } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js"
 import {
   ReactNode,
   createContext,
   useContext,
   useEffect,
   useState,
-} from "react";
-import { Profile } from "../types/profile";
-import { initialize } from "../lib/supabase";
+} from "react"
+import { initialize as initializeSupabase } from "../lib/supabase"
+import { Profile } from "../types/profile"
 
 type UserState = {
-  user?: User;
-  profile?: Profile;
-  isLoading: boolean;
-};
+  user?: User
+  profile?: Profile
+  isLoading: boolean
+  logIn: (email: string, password: string) => void
+  logOut: () => void
+  register: (
+    email: string,
+    password: string,
+    passwordConfirmation: string
+  ) => void
+}
 
-export const UserContext = createContext<UserState>({ isLoading: true });
+const initialUserState = {
+  isLoading: true,
+  logIn: () => {},
+  logOut: () => {},
+  register: () => {},
+}
+
+export const UserContext = createContext<UserState>(initialUserState)
 
 type UserProviderProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 export default function UserProvider(props: UserProviderProps) {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [state, setState] = useState<UserState>({ isLoading });
+  const logIn = async (email: string, password: string) => {}
+  const logOut = async () => {}
+  const register = async () => {}
+
+  const [state, setState] = useState<UserState>({
+    ...initialUserState,
+    logIn,
+    logOut,
+    register,
+  })
 
   useEffect(() => {
     const fetchUser = async () => {
-      initialize((sesh) => {
-        if (sesh === null) {
-          setState({ user: undefined, profile: undefined, isLoading: false });
+      initializeSupabase((session) => {
+        if (session === null) {
+          setState((state) => {
+            return {
+              ...state,
+              user: undefined,
+              profile: undefined,
+              isLoading: false,
+            }
+          })
         } else {
-          setState({ user: sesh.user, isLoading: false });
+          setState((state) => {
+            return { ...state, user: session.user, isLoading: false }
+          })
         }
-      });
-    };
-    fetchUser();
-  }, []);
+      })
+    }
+    fetchUser()
+  }, [])
 
   return (
     <UserContext.Provider value={state}>{props.children}</UserContext.Provider>
-  );
+  )
 }
 
 export function useUser() {
-  return useContext(UserContext);
+  return useContext(UserContext)
 }
