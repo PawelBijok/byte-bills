@@ -12,24 +12,26 @@ import { initialize } from "../lib/supabase";
 type UserState = {
   user?: User;
   profile?: Profile;
+  isLoading: boolean;
 };
 
-export const UserContext = createContext<UserState>({});
+export const UserContext = createContext<UserState>({ isLoading: true });
 
 type UserProviderProps = {
   children: ReactNode;
 };
 
 export default function UserProvider(props: UserProviderProps) {
-  const [state, setState] = useState<UserState>({});
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [state, setState] = useState<UserState>({ isLoading });
 
   useEffect(() => {
     const fetchUser = async () => {
       initialize((sesh) => {
         if (sesh === null) {
-          setState({ user: undefined, profile: undefined });
+          setState({ user: undefined, profile: undefined, isLoading: false });
         } else {
-          setState({ user: sesh.user });
+          setState({ user: sesh.user, isLoading: false });
         }
       });
     };

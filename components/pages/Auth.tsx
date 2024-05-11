@@ -6,6 +6,7 @@ import { FilledButton } from "../ui/buttons/FilledButton";
 import { TextButton } from "../ui/buttons/TextButton";
 import { AppInput, AppInputStatus } from "../ui/inputs/AppInput";
 import { DashedSpacer } from "../ui/spacers/DashedSpacer";
+import { router } from "expo-router";
 
 const validateEmail = (email: string): boolean => {
   const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -40,25 +41,25 @@ export default function Auth(props: AuthProps) {
     password: "",
     passwordRepeat: "",
     loading: false,
-    emailStatus: function(): AppInputStatus {
+    emailStatus: function (): AppInputStatus {
       if (!this.registering || this.email.length === 0) {
         return "initial";
       }
       return validateEmail(this.email) ? "ok" : "error";
     },
-    passwordStatus: function(): AppInputStatus {
+    passwordStatus: function (): AppInputStatus {
       if (!this.registering || this.password.length === 0) {
         return "initial";
       }
       return validatePassword(this.password) ? "ok" : "error";
     },
-    passwordRepeatStatus: function(): AppInputStatus {
+    passwordRepeatStatus: function (): AppInputStatus {
       if (this.password.length === 0 || this.passwordRepeat.length === 0) {
         return "initial";
       }
       return this.passwordRepeat === this.password ? "ok" : "error";
     },
-    isValid: function(): boolean {
+    isValid: function (): boolean {
       if (this.registering) {
         return (
           validateEmail(this.email) &&
@@ -87,6 +88,8 @@ export default function Auth(props: AuthProps) {
     });
     if (error) Alert.alert(error.message);
     setState((state) => ({ ...state, loading: false }));
+    if (error) return;
+    router.replace("/");
   }
 
   async function signUpWithEmail() {
@@ -108,6 +111,8 @@ export default function Auth(props: AuthProps) {
       Alert.alert("Please check your inbox for email verification!");
     }
     setState((state) => ({ ...state, loading: false }));
+    if (error) return;
+    router.replace("/");
   }
 
   return (
