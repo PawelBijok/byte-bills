@@ -103,7 +103,6 @@ export default function UserProvider(props: UserProviderProps) {
         .update({ default_currency_id: currency.id })
         .eq("id", userState.user!.id)
       if (error !== null) {
-        console.log(error.message)
         return
       }
       setUserState((state) => {
