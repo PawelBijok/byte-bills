@@ -1,40 +1,42 @@
-import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
-import { supabase } from "../../lib/supabase";
-import { onBgColor } from "../../lib/themes";
-import { FilledButton } from "../ui/buttons/FilledButton";
-import { TextButton } from "../ui/buttons/TextButton";
-import { AppInput, AppInputStatus } from "../ui/inputs/AppInput";
-import { DashedSpacer } from "../ui/spacers/DashedSpacer";
-import { router } from "expo-router";
+import { router } from "expo-router"
+import React, { useState } from "react"
+import { StyleSheet, View } from "react-native"
+import { useUser } from "../../context/UserContext"
+import { onBgColor } from "../../lib/themes"
+import { FilledButton } from "../ui/buttons/FilledButton"
+import { TextButton } from "../ui/buttons/TextButton"
+import { AppInput, AppInputStatus } from "../ui/inputs/AppInput"
+import { DashedSpacer } from "../ui/spacers/DashedSpacer"
 
 const validateEmail = (email: string): boolean => {
-  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return regex.test(email);
-};
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  return regex.test(email)
+}
 
 const validatePassword = (password: string): boolean => {
-  return password.length >= 5;
-};
+  return password.length >= 5
+}
 
 type AuthProps = {
-  onTypeChanged: (value: boolean) => void;
-};
+  onTypeChanged: (value: boolean) => void
+}
 
 type AuthState = {
-  registering: boolean;
-  email: string;
-  password: string;
-  passwordRepeat: string;
-  loading: boolean;
+  registering: boolean
+  email: string
+  password: string
+  passwordRepeat: string
+  loading: boolean
 } & {
-  readonly emailStatus: () => AppInputStatus;
-  readonly passwordStatus: () => AppInputStatus;
-  readonly passwordRepeatStatus: () => AppInputStatus;
-  readonly isValid: () => boolean;
-};
+  readonly emailStatus: () => AppInputStatus
+  readonly passwordStatus: () => AppInputStatus
+  readonly passwordRepeatStatus: () => AppInputStatus
+  readonly isValid: () => boolean
+}
 
 export default function Auth(props: AuthProps) {
+  const userContext = useUser()!
+
   const initialState: AuthState = {
     registering: false,
     email: "",
@@ -43,21 +45,21 @@ export default function Auth(props: AuthProps) {
     loading: false,
     emailStatus: function (): AppInputStatus {
       if (!this.registering || this.email.length === 0) {
-        return "initial";
+        return "initial"
       }
-      return validateEmail(this.email) ? "ok" : "error";
+      return validateEmail(this.email) ? "ok" : "error"
     },
     passwordStatus: function (): AppInputStatus {
       if (!this.registering || this.password.length === 0) {
-        return "initial";
+        return "initial"
       }
-      return validatePassword(this.password) ? "ok" : "error";
+      return validatePassword(this.password) ? "ok" : "error"
     },
     passwordRepeatStatus: function (): AppInputStatus {
       if (this.password.length === 0 || this.passwordRepeat.length === 0) {
-        return "initial";
+        return "initial"
       }
-      return this.passwordRepeat === this.password ? "ok" : "error";
+      return this.passwordRepeat === this.password ? "ok" : "error"
     },
     isValid: function (): boolean {
       if (this.registering) {
@@ -65,54 +67,38 @@ export default function Auth(props: AuthProps) {
           validateEmail(this.email) &&
           validatePassword(this.password) &&
           this.password === this.passwordRepeat
-        );
+        )
       }
-      return true;
+      return true
     },
-  };
-  const [state, setState] = useState<AuthState>(initialState);
+  }
+  const [state, setState] = useState<AuthState>(initialState)
 
   function onTypeChanged() {
-    props.onTypeChanged(!state.registering);
-    setState((state) => ({ ...state, registering: !state.registering }));
+    props.onTypeChanged(!state.registering)
+    setState((state) => ({ ...state, registering: !state.registering }))
   }
 
   async function signInWithEmail() {
     if (!state.isValid()) {
-      return;
+      return
     }
-    setState((state) => ({ ...state, loading: true }));
-    const { error } = await supabase.auth.signInWithPassword({
-      email: state.email,
-      password: state.password,
-    });
-    if (error) Alert.alert(error.message);
-    setState((state) => ({ ...state, loading: false }));
-    if (error) return;
-    router.replace("/");
+    setState((state) => ({ ...state, loading: true }))
+
+    const ok = await userContext.logIn(state.email, state.password)
+
+    setState((state) => ({ ...state, loading: false }))
+    if (ok) router.replace("/")
   }
 
   async function signUpWithEmail() {
     if (!state.isValid()) {
-      return;
+      return
     }
-    setState((state) => ({ ...state, loading: true }));
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: state.email,
-      password: state.password,
-    });
-    if (error) {
-      Alert.alert(error.message);
-    }
-    if (!session) {
-      Alert.alert("Please check your inbox for email verification!");
-    }
-    setState((state) => ({ ...state, loading: false }));
-    if (error) return;
-    router.replace("/");
+    setState((state) => ({ ...state, loading: true }))
+    const ok = await userContext.register(state.email, state.password)
+    setState((state) => ({ ...state, loading: false }))
+    if (ok) router.replace("/")
   }
 
   return (
@@ -202,7 +188,7 @@ export default function Auth(props: AuthProps) {
         ></TextButton>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -219,4 +205,4 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginBottom: 40,
   },
-});
+})
