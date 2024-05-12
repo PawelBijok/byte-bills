@@ -1,25 +1,17 @@
-import { Redirect, Slot, SplashScreen, Stack } from "expo-router";
-import { useUser } from "../../context/UserContext";
-import { useEffect } from "react";
-import { View } from "react-native";
-import { Text } from "react-native";
+import { Redirect, Slot, SplashScreen } from "expo-router"
+import { useUser } from "../../context/UserContext"
 
 export default function AppLayout() {
-  console.log("app layout");
-
-  const userContext = useUser();
+  const userContext = useUser()
   if (userContext.isLoading) {
-    console.log("there is some loading stuff");
-    return;
+    return
   }
 
-  SplashScreen.hideAsync();
+  SplashScreen.hideAsync()
 
   if (userContext.user === undefined) {
-    console.log("nie działa ");
-    return <Redirect href="/auth" />;
+    return <Redirect href="/auth" />
   }
-  console.log(" działa XD ");
 
-  return <Slot />;
+  return <Slot />
 }

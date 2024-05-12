@@ -1,4 +1,4 @@
-import { User } from "@supabase/supabase-js"
+import { Session, User } from "@supabase/supabase-js"
 import {
   ReactNode,
   createContext,
@@ -8,6 +8,7 @@ import {
 } from "react"
 import { Alert } from "react-native"
 import { initialize as initializeSupabase, supabase } from "../lib/supabase"
+import { Currency } from "../types/currency"
 import { Profile } from "../types/profile"
 
 type UserState = {
@@ -17,6 +18,7 @@ type UserState = {
   logIn: (email: string, password: string) => Promise<boolean>
   logOut: () => void
   register: (email: string, password: string) => Promise<boolean>
+  setDefaultCurrency: (currency: Currency) => void
 }
 
 const initialUserState = {
@@ -28,6 +30,7 @@ const initialUserState = {
   register: async () => {
     return false
   },
+  setDefaultCurrency: () => {},
 }
 
 export const UserContext = createContext<UserState>(initialUserState)
@@ -47,6 +50,21 @@ export default function UserProvider(props: UserProviderProps) {
       return false
     }
     return true
+  }
+
+  const getProfile = async (user: User): Promise<Profile | undefined> => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select(
+        "id, fullName:full_name, avatarUrl:avatar_url, currency:currencies!inner(*)"
+      )
+      .eq("id", user.id)
+      .returns<Profile[]>()
+      .single()
+    if (error || data === null) {
+      return undefined
+    }
+    return data
   }
   const logOut = async () => {
     supabase.auth.signOut()
@@ -71,7 +89,7 @@ export default function UserProvider(props: UserProviderProps) {
     return true
   }
 
-  const [state, setState] = useState<UserState>({
+  const [userState, setUserState] = useState<UserState>({
     ...initialUserState,
     logIn,
     logOut,
@@ -79,29 +97,53 @@ export default function UserProvider(props: UserProviderProps) {
   })
 
   useEffect(() => {
-    const fetchUser = async () => {
-      initializeSupabase((session) => {
-        if (session === null) {
-          setState((state) => {
-            return {
-              ...state,
-              user: undefined,
-              profile: undefined,
-              isLoading: false,
-            }
-          })
-        } else {
-          setState((state) => {
-            return { ...state, user: session.user, isLoading: false }
-          })
-        }
+    async function setDefaultCurrency(currency: Currency) {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ default_currency_id: currency.id })
+        .eq("id", userState.user!.id)
+      if (error !== null) {
+        console.log(error.message)
+        return
+      }
+      setUserState((state) => {
+        return { ...state, profile: { ...state.profile!, currency } }
       })
     }
-    fetchUser()
+    setUserState((state) => {
+      return { ...state, setDefaultCurrency }
+    })
+  }, [userState.user, setUserState])
+
+  async function onSessionChanged(session: Session | null) {
+    if (session === null) {
+      setUserState((state) => {
+        return {
+          ...state,
+          user: undefined,
+          profile: undefined,
+          isLoading: false,
+        }
+      })
+    } else {
+      let profile: Profile | undefined = undefined
+      if (userState.profile === undefined) {
+        profile = await getProfile(session.user)
+      }
+      setUserState((state) => {
+        return { ...state, user: session.user, profile, isLoading: false }
+      })
+    }
+  }
+
+  useEffect(() => {
+    initializeSupabase(onSessionChanged)
   }, [])
 
   return (
-    <UserContext.Provider value={state}>{props.children}</UserContext.Provider>
+    <UserContext.Provider value={userState}>
+      {props.children}
+    </UserContext.Provider>
   )
 }
 
