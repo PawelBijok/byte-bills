@@ -1,7 +1,7 @@
 import { router } from "expo-router"
 import { useState } from "react"
 import { FlatList, SafeAreaView, View } from "react-native"
-import { useBills } from "../../context/BillsContext"
+import { useBillsStore } from "../../store/BillsStore"
 import { getFullAmount } from "../../types/bill"
 import BillEntryItem from "../bills/BillEntryItem"
 import MonthSummary from "../bills/MonthSummary"
@@ -30,14 +30,11 @@ export default function Bills() {
   ]
 
   const [month, setMonth] = useState<number>(currentMonth)
-  let bills = useBills().filter((bill) => {
+  let bills = useBillsStore().bills.filter((bill) => {
     return bill.date.getMonth() == month
   })
 
-  const sum =
-    bills.length > 0
-      ? bills.map((bill) => getFullAmount(bill)).reduce((s, a) => s + a)
-      : 0
+  const sum = bills.length > 0 ? bills.map((bill) => getFullAmount(bill)).reduce((s, a) => s + a) : 0
 
   const [year, setYear] = useState<number>(currentYear)
 

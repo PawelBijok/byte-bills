@@ -1,7 +1,6 @@
-import { View } from "react-native";
-import AddNewBill from "../../../../components/pages/AddNewBill";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar"
+import { SafeAreaView } from "react-native-safe-area-context"
+import AddNewBill from "../../../components/pages/AddNewBill"
 
 export default function NewBillPage() {
   return (
@@ -14,5 +13,5 @@ export default function NewBillPage() {
       <StatusBar style="light" />
       <AddNewBill />
     </SafeAreaView>
-  );
+  )
 }

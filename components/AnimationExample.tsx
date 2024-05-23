@@ -1,10 +1,5 @@
-import { Button, StyleSheet, View } from "react-native"
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated"
+import { Button, StyleSheet, Text, View } from "react-native"
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 
 export default function AnimatedStyleUpdateExample() {
   const randomWidth = useSharedValue(10)
@@ -22,7 +17,9 @@ export default function AnimatedStyleUpdateExample() {
 
   return (
     <View style={styles.container}>
-      <Animated.Text style={[styles.box, style]}></Animated.Text>
+      <Animated.View style={[styles.box, style]}>
+        <Text style={{ color: "red" }}>To jest test</Text>
+      </Animated.View>
       <Button
         title="toggle"
         onPress={() => {

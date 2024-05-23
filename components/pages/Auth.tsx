@@ -1,7 +1,6 @@
-import { router } from "expo-router"
 import React, { useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { useUser } from "../../context/UserContext"
+import { Alert, StyleSheet, View } from "react-native"
+import { supabase } from "../../lib/supabase"
 import { onBgColor } from "../../lib/themes"
 import { FilledButton } from "../ui/buttons/FilledButton"
 import { TextButton } from "../ui/buttons/TextButton"
@@ -35,8 +34,6 @@ type AuthState = {
 }
 
 export default function Auth(props: AuthProps) {
-  const userContext = useUser()!
-
   const initialState: AuthState = {
     registering: false,
     email: "",
@@ -63,11 +60,7 @@ export default function Auth(props: AuthProps) {
     },
     isValid: function (): boolean {
       if (this.registering) {
-        return (
-          validateEmail(this.email) &&
-          validatePassword(this.password) &&
-          this.password === this.passwordRepeat
-        )
+        return validateEmail(this.email) && validatePassword(this.password) && this.password === this.passwordRepeat
       }
       return true
     },
@@ -84,11 +77,12 @@ export default function Auth(props: AuthProps) {
       return
     }
     setState((state) => ({ ...state, loading: true }))
-
-    const ok = await userContext.logIn(state.email, state.password)
-
+    const { error } = await supabase.auth.signInWithPassword({
+      email: state.email,
+      password: state.password,
+    })
+    if (error) Alert.alert(error.message)
     setState((state) => ({ ...state, loading: false }))
-    if (ok) router.replace("/")
   }
 
   async function signUpWithEmail() {
@@ -96,9 +90,20 @@ export default function Auth(props: AuthProps) {
       return
     }
     setState((state) => ({ ...state, loading: true }))
-    const ok = await userContext.register(state.email, state.password)
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: state.email,
+      password: state.password,
+    })
+    if (error) {
+      Alert.alert(error.message)
+    }
+    if (!session) {
+      Alert.alert("Please check your inbox for email verification!")
+    }
     setState((state) => ({ ...state, loading: false }))
-    if (ok) router.replace("/")
   }
 
   return (
@@ -157,33 +162,15 @@ export default function Auth(props: AuthProps) {
         ) : null}
 
         {state.registering ? (
-          <FilledButton
-            title="Sign up"
-            onPress={signUpWithEmail}
-            loading={state.loading}
-          ></FilledButton>
+          <FilledButton title="Sign up" onPress={signUpWithEmail} loading={state.loading}></FilledButton>
         ) : (
-          <FilledButton
-            title={"Sign in"}
-            onPress={signInWithEmail}
-            loading={state.loading}
-          />
+          <FilledButton title={"Sign in"} onPress={signInWithEmail} loading={state.loading} />
         )}
       </View>
       <View style={[styles.flexSpace]}>
-        <DashedSpacer
-          color={onBgColor()}
-          elements={25}
-          elementHeight={1}
-          elementSpacing={4}
-          spacerHeight={40}
-        />
+        <DashedSpacer color={onBgColor()} elements={25} elementHeight={1} elementSpacing={4} spacerHeight={40} />
         <TextButton
-          title={
-            state.registering
-              ? "Already have an account? Sign in"
-              : "Don't have an account? Register"
-          }
+          title={state.registering ? "Already have an account? Sign in" : "Don't have an account? Register"}
           onPress={onTypeChanged}
         ></TextButton>
       </View>

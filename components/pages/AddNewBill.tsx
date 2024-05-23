@@ -1,103 +1,98 @@
-import * as Crypto from "expo-crypto";
-import { router } from "expo-router";
-import { useState } from "react";
-import { FlatList, Text, View } from "react-native";
-import CategotyAmountRow from "../bills/CategoryAmountRow";
-import { FilledButton } from "../ui/buttons/FilledButton";
-import { TextButton } from "../ui/buttons/TextButton";
-import { Gap } from "../ui/common/Gap";
-import CurrencySelector from "../ui/modals/CurrencySelector";
-import { DashedSpacer } from "../ui/spacers/DashedSpacer";
-import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes";
-import { Bill, Category } from "../../types/bill";
-import { useBillsDispatch } from "../../context/BillsContext";
-import moment from "moment";
-import DateSelector from "../ui/modals/DateSelector";
-import LabelButtonRow from "../ui/buttons/LabelButtonRow";
-import { useCurrency } from "../../context/CurrencyContext";
-import { Currency } from "../../types/currency";
+import * as Crypto from "expo-crypto"
+import { router } from "expo-router"
+import moment from "moment"
+import { useState } from "react"
+import { FlatList, View } from "react-native"
+import { useBillsStore } from "../../store/BillsStore"
+import { useCurrenciesStore } from "../../store/CurrenciesStore"
+import { useUserStore } from "../../store/UserStore"
+import { Bill, Category } from "../../types/bill"
+import { Currency } from "../../types/currency"
+import CategotyAmountRow from "../bills/CategoryAmountRow"
+import { FilledButton } from "../ui/buttons/FilledButton"
+import LabelButtonRow from "../ui/buttons/LabelButtonRow"
+import { TextButton } from "../ui/buttons/TextButton"
+import { Gap } from "../ui/common/Gap"
+import CurrencySelector from "../ui/modals/CurrencySelector"
+import DateSelector from "../ui/modals/DateSelector"
 
 type EditableCategory = {
-  id: string;
-  name: string;
-  value: string;
-};
+  id: string
+  name: string
+  value: string
+}
 
 export default function AddNewBill() {
-  const currencyContext = useCurrency()!;
-  const billsDispatcher = useBillsDispatch();
-  const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false);
+  const currenciesStore = useCurrenciesStore()
+  const userStore = useUserStore()
+  const billsStore = useBillsStore()
+  const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false)
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(
-    currencyContext.defaultCurrency ?? currencyContext.availableCurrencies![0],
-  );
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [datePickerVisible, setDatePickerVisible] = useState(false);
-  const freshCategory = { name: "", value: "", id: "1" };
-  const [categories, setCategories] = useState<EditableCategory[]>([
-    { ...freshCategory },
-  ]);
+    userStore.profile?.currency ?? currenciesStore.availableCurrencies![0]
+  )
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [datePickerVisible, setDatePickerVisible] = useState(false)
+  const freshCategory = { name: "", value: "", id: "1" }
+  const [categories, setCategories] = useState<EditableCategory[]>([{ ...freshCategory }])
 
   const save = () => {
     const billCategoties: Category[] = categories.map((category) => {
-      const value = parseFloat(category.value.replaceAll(",", "."));
+      const value = parseFloat(category.value.replaceAll(",", "."))
       return {
         name: category.name,
         value: value,
-      };
-    });
+      }
+    })
 
     const bill: Bill = {
       date: selectedDate,
       id: Crypto.randomUUID(),
       currency: selectedCurrency,
       categories: billCategoties,
-    };
+    }
 
-    billsDispatcher!({
-      type: "ADD",
-      bill: bill,
-    });
+    billsStore.addBill(bill)
 
     if (canDismiss) {
-      router.back();
+      router.back()
     }
-  };
+  }
 
   const updateCategoryName = (id: string, name: string) => {
     setCategories((oldCategories) => {
       return oldCategories.map((category) => {
         if (category.id === id) {
-          return { ...category, name };
+          return { ...category, name }
         }
-        return category;
-      });
-    });
-  };
+        return category
+      })
+    })
+  }
   const updateCategoryAmount = (id: string, value: string) => {
     setCategories((oldCategories) => {
       return oldCategories.map((category) => {
         if (category.id === id) {
-          return { ...category, value: value };
+          return { ...category, value: value }
         }
-        return category;
-      });
-    });
-  };
+        return category
+      })
+    })
+  }
 
   const addNewCategory = () => {
-    const UUID = Crypto.randomUUID();
+    const UUID = Crypto.randomUUID()
     setCategories((oldCategories) => {
-      return [...oldCategories, { ...freshCategory, id: UUID }];
-    });
-  };
+      return [...oldCategories, { ...freshCategory, id: UUID }]
+    })
+  }
 
   const deleteCategory = (id: string) => {
     setCategories((oldCategories) => {
-      return oldCategories.filter((c) => c.id !== id);
-    });
-  };
+      return oldCategories.filter((c) => c.id !== id)
+    })
+  }
 
-  const canDismiss = router.canGoBack();
+  const canDismiss = router.canGoBack()
   return (
     <View
       style={{
@@ -117,9 +112,7 @@ export default function AddNewBill() {
             <CategotyAmountRow
               categoryName={item.name}
               amount={item.value}
-              onAmountChanged={(amount) =>
-                updateCategoryAmount(item.id, amount)
-              }
+              onAmountChanged={(amount) => updateCategoryAmount(item.id, amount)}
               onNameChanged={(name) => updateCategoryName(item.id, name)}
               onDelete={() => deleteCategory(item.id)}
               enableDeleteButton={categories.length > 1}
@@ -159,18 +152,18 @@ export default function AddNewBill() {
         initialValue={selectedCurrency}
         onCancel={() => setCurrencyPickerVisible(false)}
         onCurrencySelected={(currency) => {
-          setCurrencyPickerVisible(false);
-          setSelectedCurrency(currency);
+          setCurrencyPickerVisible(false)
+          setSelectedCurrency(currency)
         }}
       />
       <DateSelector
         visible={datePickerVisible}
         onCancel={() => setDatePickerVisible(false)}
         onDateSelected={(date) => {
-          setDatePickerVisible(false);
-          setSelectedDate(date);
+          setDatePickerVisible(false)
+          setSelectedDate(date)
         }}
       />
     </View>
-  );
+  )
 }

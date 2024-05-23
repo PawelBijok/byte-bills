@@ -1,35 +1,51 @@
-import { Session } from "@supabase/supabase-js"
 import { useState } from "react"
+import { Alert } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { useUser } from "../../context/UserContext"
+import { updateDefaultCurrency } from "../../lib/db/profile"
+import { supabase } from "../../lib/supabase"
+import { useBillsStore } from "../../store/BillsStore"
+import { useUserStore } from "../../store/UserStore"
+import { Currency } from "../../types/currency"
 import AnimatedStyleUpdateExample from "../AnimationExample"
 import { FilledButton } from "../ui/buttons/FilledButton"
 import LabelButtonRow from "../ui/buttons/LabelButtonRow"
 import CurrencySelector from "../ui/modals/CurrencySelector"
 
 export default function Profile() {
-  const [session, setSession] = useState<Session | null>(null)
   const [currencyModalShown, setCurrencyModalShown] = useState(false)
 
-  const userContext = useUser()!
+  const userStore = useUserStore()!
+  const billsStore = useBillsStore()
+
+  const onCurrencySelected = async (currency: Currency) => {
+    setCurrencyModalShown(false)
+    const success = await updateDefaultCurrency(userStore.user!, currency)
+    if (success) {
+      userStore.updateDefaultCurrency(currency)
+    } else {
+      Alert.alert("Error", "Failed to update default currency")
+    }
+  }
 
   return (
     <SafeAreaView style={{ padding: 15 }}>
       <LabelButtonRow
-        buttonLabel={userContext.profile?.currency?.shortName ?? "Loading"}
+        buttonLabel={userStore.profile?.currency?.shortName ?? "Loading"}
         label="Default currency"
         onPress={() => setCurrencyModalShown(true)}
       />
 
-      <FilledButton title="Sign out" onPress={userContext.logOut} />
+      <FilledButton
+        title="Sign out"
+        onPress={() => {
+          supabase.auth.signOut()
+        }}
+      />
       <CurrencySelector
         visible={currencyModalShown}
-        initialValue={userContext.profile?.currency}
+        initialValue={userStore.profile?.currency}
         onCancel={() => setCurrencyModalShown(false)}
-        onCurrencySelected={(currency) => {
-          userContext.setDefaultCurrency(currency)
-          setCurrencyModalShown(false)
-        }}
+        onCurrencySelected={onCurrencySelected}
       />
       <AnimatedStyleUpdateExample />
     </SafeAreaView>
