@@ -1,6 +1,6 @@
 import { router } from "expo-router"
-import { useEffect, useState } from "react"
-import { FlatList, SafeAreaView, View } from "react-native"
+import { useMemo, useState } from "react"
+import { ActivityIndicator, Alert, FlatList, SafeAreaView, View } from "react-native"
 import { getUserBills } from "../../lib/db/bills"
 import { useBillsStore } from "../../store/BillsStore"
 import { useUserStore } from "../../store/UserStore"
@@ -17,10 +17,18 @@ export default function Bills() {
   const currentMonth = now.getMonth()
 
   const userStore = useUserStore()
+  const billsStore = useBillsStore()
+  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  useMemo(() => {
     const getBills = async () => {
       const bills = await getUserBills(userStore.user!)
+      setLoading(false)
+      if (bills === undefined) {
+        Alert.alert("Error", "Failed to load bills")
+        return
+      }
+      billsStore.addBills(bills)
     }
     getBills()
   }, [])
@@ -36,7 +44,7 @@ export default function Bills() {
     "August",
     "September",
     "October",
-    "Novemer",
+    "November",
     "December",
   ]
 
@@ -82,12 +90,25 @@ export default function Bills() {
           }}
         />
         <Gap size="xl" />
-        <FlatList
-          data={bills}
-          ItemSeparatorComponent={() => <Gap size="l" />}
-          renderItem={({ item }) => <BillEntryItem bill={item} />}
-          keyExtractor={(item) => item.id}
-        />
+        {loading && (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ActivityIndicator />
+          </View>
+        )}
+        {!loading && bills.length !== 0 && (
+          <FlatList
+            data={bills}
+            ItemSeparatorComponent={() => <Gap size="l" />}
+            renderItem={({ item }) => <BillEntryItem bill={item} />}
+            keyExtractor={(item) => item.id}
+          />
+        )}
 
         <FilledButton
           title="Add new bill"
