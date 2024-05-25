@@ -3,7 +3,6 @@ import { Alert } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { updateDefaultCurrency } from "../../lib/db/profile"
 import { supabase } from "../../lib/supabase"
-import { useBillsStore } from "../../store/BillsStore"
 import { useUserStore } from "../../store/UserStore"
 import { Currency } from "../../types/currency"
 import AnimatedStyleUpdateExample from "../AnimationExample"
@@ -14,8 +13,7 @@ import CurrencySelector from "../ui/modals/CurrencySelector"
 export default function Profile() {
   const [currencyModalShown, setCurrencyModalShown] = useState(false)
 
-  const userStore = useUserStore()!
-  const billsStore = useBillsStore()
+  const userStore = useUserStore()
 
   const onCurrencySelected = async (currency: Currency) => {
     setCurrencyModalShown(false)

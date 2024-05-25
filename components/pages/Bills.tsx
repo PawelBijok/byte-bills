@@ -1,7 +1,9 @@
 import { router } from "expo-router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FlatList, SafeAreaView, View } from "react-native"
+import { getUserBills } from "../../lib/db/bills"
 import { useBillsStore } from "../../store/BillsStore"
+import { useUserStore } from "../../store/UserStore"
 import { getFullAmount } from "../../types/bill"
 import BillEntryItem from "../bills/BillEntryItem"
 import MonthSummary from "../bills/MonthSummary"
@@ -13,6 +15,15 @@ export default function Bills() {
   let now = new Date()
   const currentYear = now.getFullYear()
   const currentMonth = now.getMonth()
+
+  const userStore = useUserStore()
+
+  useEffect(() => {
+    const getBills = async () => {
+      const bills = await getUserBills(userStore.user!)
+    }
+    getBills()
+  }, [])
 
   const months = [
     "January",
