@@ -1,7 +1,9 @@
 import { router } from "expo-router"
 import { useMemo, useState } from "react"
 import { ActivityIndicator, Alert, FlatList, SafeAreaView, View } from "react-native"
+import { Text } from "react-native-elements"
 import { getUserBills } from "../../lib/db/bills"
+import { fonts } from "../../lib/themes"
 import { useBillsStore } from "../../store/BillsStore"
 import { useUserStore } from "../../store/UserStore"
 import { getFullAmount } from "../../types/bill"
@@ -108,6 +110,32 @@ export default function Bills() {
             renderItem={({ item }) => <BillEntryItem bill={item} />}
             keyExtractor={(item) => item.id}
           />
+        )}
+        {!loading && bills.length === 0 && (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: fonts.pixelify,
+                fontSize: 30,
+              }}
+            >
+              ...404...
+            </Text>
+            <Text
+              style={{
+                fontFamily: fonts.overpass,
+                fontSize: 16,
+              }}
+            >
+              No bills for this month
+            </Text>
+          </View>
         )}
 
         <FilledButton
