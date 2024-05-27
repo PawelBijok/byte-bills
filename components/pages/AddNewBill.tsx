@@ -2,13 +2,14 @@ import * as Crypto from "expo-crypto"
 import { router } from "expo-router"
 import moment from "moment"
 import { useState } from "react"
-import { FlatList, View } from "react-native"
+import { Alert, FlatList, View } from "react-native"
+import { saveBill } from "../../lib/db/bills"
 import { useBillsStore } from "../../store/BillsStore"
 import { useCurrenciesStore } from "../../store/CurrenciesStore"
 import { useUserStore } from "../../store/UserStore"
 import { Bill, Category } from "../../types/bill"
 import { Currency } from "../../types/currency"
-import CategotyAmountRow from "../bills/CategoryAmountRow"
+import CategoryAmountRow from "../bills/CategoryAmountRow"
 import { FilledButton } from "../ui/buttons/FilledButton"
 import LabelButtonRow from "../ui/buttons/LabelButtonRow"
 import { TextButton } from "../ui/buttons/TextButton"
@@ -34,8 +35,10 @@ export default function AddNewBill() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
   const freshCategory = { name: "", value: "", id: "1" }
   const [categories, setCategories] = useState<EditableCategory[]>([{ ...freshCategory }])
+  const [loading, setLoading] = useState(false)
 
-  const save = () => {
+  const save = async () => {
+    setLoading(true)
     const billCategoties: Category[] = categories.map((category) => {
       const value = parseFloat(category.value.replaceAll(",", "."))
       return {
@@ -51,7 +54,13 @@ export default function AddNewBill() {
       categories: billCategoties,
     }
 
-    billsStore.addBill(bill)
+    const databaseBill = await saveBill(bill)
+    setLoading(false)
+    if (databaseBill === undefined) {
+      return Alert.alert("Error", "Failed to save bill")
+    }
+
+    billsStore.addBill(databaseBill)
 
     if (canDismiss) {
       router.back()
@@ -109,7 +118,7 @@ export default function AddNewBill() {
         <FlatList
           data={categories}
           renderItem={({ item }) => (
-            <CategotyAmountRow
+            <CategoryAmountRow
               categoryName={item.name}
               amount={item.value}
               onAmountChanged={(amount) => updateCategoryAmount(item.id, amount)}
@@ -146,7 +155,7 @@ export default function AddNewBill() {
         onPress={() => setDatePickerVisible(true)}
       />
 
-      <FilledButton title="Save" onPress={save} />
+      <FilledButton title="Save" onPress={save} loading={loading} />
       <CurrencySelector
         visible={currencyPickerVisible}
         initialValue={selectedCurrency}

@@ -1,7 +1,7 @@
 import { Currency } from "./currency"
 
 export type Bill = {
-  id: string
+  id?: string
   currency: Currency
   date: Date
   categories: Category[]

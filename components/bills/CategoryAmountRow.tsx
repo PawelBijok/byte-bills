@@ -1,19 +1,19 @@
-import { Feather } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
-import { accentColor, onBgColor, onBgSubtleColor } from "../../lib/themes";
-import { Gap } from "../ui/common/Gap";
-import { AppInput } from "../ui/inputs/AppInput";
+import { Feather } from "@expo/vector-icons"
+import { TouchableOpacity, View } from "react-native"
+import { accentColor, onBgSubtleColor } from "../../lib/themes"
+import { Gap } from "../ui/common/Gap"
+import { AppInput } from "../ui/inputs/AppInput"
 
 type CategoryAmountRowProps = {
-  categoryName?: string;
-  amount?: string;
-  onNameChanged: (name: string) => void;
-  onAmountChanged: (value: string) => void;
-  onDelete: () => void;
-  enableDeleteButton?: boolean;
-};
+  categoryName?: string
+  amount?: string
+  onNameChanged: (name: string) => void
+  onAmountChanged: (value: string) => void
+  onDelete: () => void
+  enableDeleteButton?: boolean
+}
 
-export default function CategotyAmountRow(props: CategoryAmountRowProps) {
+export default function CategoryAmountRow(props: CategoryAmountRowProps) {
   return (
     <View
       style={{
@@ -54,13 +54,9 @@ export default function CategotyAmountRow(props: CategoryAmountRowProps) {
         onPress={props.enableDeleteButton ? props.onDelete : undefined}
       >
         <View style={{ paddingHorizontal: 5 }}>
-          <Feather
-            name="minus-square"
-            size={20}
-            color={props.enableDeleteButton ? accentColor() : onBgSubtleColor()}
-          />
+          <Feather name="minus-square" size={20} color={props.enableDeleteButton ? accentColor() : onBgSubtleColor()} />
         </View>
       </TouchableOpacity>
     </View>
-  );
+  )
 }

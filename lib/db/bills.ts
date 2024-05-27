@@ -16,3 +16,20 @@ export const getUserBills = async (user: User): Promise<Bill[] | undefined> => {
   })
   return data
 }
+
+export const saveBill = async (bill: Bill): Promise<Bill | undefined> => {
+  const { data, error } = await supabase
+    .from("bills")
+    .insert([
+      {
+        currency_id: bill.currency.id,
+        categories: bill.categories,
+      },
+    ])
+    .select()
+
+  if (error !== null || data === null) {
+    return undefined
+  }
+  return { ...bill, id: data[0].id }
+}

@@ -108,7 +108,7 @@ export default function Bills() {
             data={bills}
             ItemSeparatorComponent={() => <Gap size="l" />}
             renderItem={({ item }) => <BillEntryItem bill={item} />}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id ?? item.date.toString()}
           />
         )}
         {!loading && bills.length === 0 && (
