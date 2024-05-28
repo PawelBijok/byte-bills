@@ -33,3 +33,12 @@ export const saveBill = async (bill: Bill): Promise<Bill | undefined> => {
   }
   return { ...bill, id: data[0].id }
 }
+
+export const deleteBill = async (billId: string): Promise<boolean> => {
+  const { error } = await supabase.from("bills").delete().eq("id", billId)
+  if (error !== null) {
+    return false
+  }
+
+  return true
+}

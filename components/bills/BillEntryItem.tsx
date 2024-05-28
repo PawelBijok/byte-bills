@@ -1,8 +1,10 @@
 import moment from "moment"
 import React from "react"
-import { Animated, Text, TouchableOpacity, View } from "react-native"
+import { Alert, Animated, Text, TouchableOpacity, View } from "react-native"
 import { Swipeable } from "react-native-gesture-handler"
+import { deleteBill } from "../../lib/db/bills"
 import { errorColor, fonts, onBgColor, onBgSubtleColor } from "../../lib/themes"
+import { useBillsStore } from "../../store/BillsStore"
 import { Bill, getFullAmount } from "../../types/bill"
 import { Gap } from "../ui/common/Gap"
 import TextTag from "../ui/text/TextTag"
@@ -15,8 +17,38 @@ export default function BillEntryItem(props: BillEntryItemProps) {
   let textColor = onBgColor()
   let error = errorColor()
   let borderColor = onBgSubtleColor()
+  const billsStore = useBillsStore()
 
   const uniqueCategoriesNames: string[] = [...new Set(props.bill.categories.map((e) => e.name))]
+
+  const deleteItem = async () => {
+    Alert.alert("Warning", "Are you sure you want to delete this bill?", [
+      {
+        text: "Delete",
+        onPress: () => {
+          confirmDelete()
+        },
+        style: "destructive",
+      },
+      {
+        text: "Cancel",
+        onPress: () => {},
+        style: "cancel",
+      },
+    ])
+  }
+
+  const confirmDelete = async () => {
+    const billId = props.bill.id
+    if (billId === undefined) {
+      return
+    }
+    const success = deleteBill(billId)
+    if (!success) {
+      return Alert.alert("Error", "Failed to delete bill")
+    }
+    billsStore.removeBill(billId)
+  }
 
   const renderRightActions = (
     progress: Animated.AnimatedInterpolation<number>,
@@ -28,13 +60,7 @@ export default function BillEntryItem(props: BillEntryItemProps) {
         flexDirection: "row",
       }}
     >
-      <RightActionElement
-        text="Delete"
-        color={`${error}33`}
-        x={85}
-        progress={progress}
-        onPress={() => console.log("delete pressed")}
-      />
+      <RightActionElement text="Delete" color={`${error}33`} x={85} progress={progress} onPress={deleteItem} />
     </View>
   )
   return (

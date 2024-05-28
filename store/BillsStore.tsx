@@ -5,6 +5,7 @@ type BillsStore = {
   bills: Bill[]
   addBill: (bill: Bill) => void
   addBills: (bills: Bill[]) => void
+  removeBill: (billId: string) => void
 }
 
 export const useBillsStore = create<BillsStore>((set) => {
@@ -18,6 +19,11 @@ export const useBillsStore = create<BillsStore>((set) => {
     addBills: (bills: Bill[]) => {
       set((state) => {
         return { bills: [...state.bills, ...bills] }
+      })
+    },
+    removeBill: (billId: string) => {
+      set((state) => {
+        return { bills: state.bills.filter((bill) => bill.id !== billId) }
       })
     },
   }
