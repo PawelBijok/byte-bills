@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { Text, TouchableOpacity, View } from "react-native"
+import { Text, View } from "react-native"
 import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes"
+import OpacityButtonWrapper from "../ui/buttons/OpacityButtonWrapper"
 import { Gap } from "../ui/common/Gap"
 import { DashedSpacer } from "../ui/spacers/DashedSpacer"
 
@@ -13,12 +14,7 @@ export default function MonthSummary(props: MonthSummaryProps) {
   let borderColor = onBgSubtleColor()
   return (
     <View>
-      <DashedSpacer
-        color={borderColor}
-        elementHeight={2}
-        elementSpacing={10}
-        elements={15}
-      />
+      <DashedSpacer color={borderColor} elementHeight={2} elementSpacing={10} elements={15} />
       <Gap size="l" />
       <View
         style={{
@@ -30,15 +26,9 @@ export default function MonthSummary(props: MonthSummaryProps) {
         <Text style={{ color, fontSize: 25, fontFamily: fonts.overpassBlack }}>
           {`${props.sum.toFixed(2)} ${props.currency}`}
         </Text>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("export month")
-          }}
-        >
-          <View style={{ padding: 5 }}>
-            <MaterialCommunityIcons name="export" size={30} color={color} />
-          </View>
-        </TouchableOpacity>
+        <OpacityButtonWrapper onPress={() => console.log("export pressed")}>
+          <MaterialCommunityIcons name="export" size={30} color={color} />
+        </OpacityButtonWrapper>
       </View>
     </View>
   )

@@ -1,63 +1,125 @@
-import { Text, View } from "react-native";
-import { fonts, onBgColor, onBgSubtleColor } from "../../lib/themes";
-import { Gap } from "../ui/common/Gap";
-import TextTag from "../ui/text/TextTag";
-import { Bill, getFullAmount } from "../../types/bill";
-import moment from "moment";
+import moment from "moment"
+import React from "react"
+import { Animated, Text, TouchableOpacity, View } from "react-native"
+import { Swipeable } from "react-native-gesture-handler"
+import { errorColor, fonts, onBgColor, onBgSubtleColor } from "../../lib/themes"
+import { Bill, getFullAmount } from "../../types/bill"
+import { Gap } from "../ui/common/Gap"
+import TextTag from "../ui/text/TextTag"
 
 type BillEntryItemProps = {
-  bill: Bill;
-};
+  bill: Bill
+}
 
 export default function BillEntryItem(props: BillEntryItemProps) {
-  let textColor = onBgColor();
-  let borderColor = onBgSubtleColor();
-  const uniqueCategoriesNames: string[] = [
-    ...new Set(props.bill.categories.map((e) => e.name)),
-  ];
-  return (
+  let textColor = onBgColor()
+  let error = errorColor()
+  let borderColor = onBgSubtleColor()
+
+  const uniqueCategoriesNames: string[] = [...new Set(props.bill.categories.map((e) => e.name))]
+
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    _dragAnimatedValue: Animated.AnimatedInterpolation<number>
+  ) => (
     <View
       style={{
-        borderColor: borderColor,
-        borderWidth: 2,
-        padding: 10,
-        borderStyle: "dashed",
-        borderRadius: 5,
+        width: 90,
+        flexDirection: "row",
       }}
     >
+      <RightActionElement
+        text="Delete"
+        color={`${error}33`}
+        x={85}
+        progress={progress}
+        onPress={() => console.log("delete pressed")}
+      />
+    </View>
+  )
+  return (
+    <Swipeable renderRightActions={renderRightActions}>
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          borderColor: borderColor,
+          borderWidth: 2,
+          padding: 10,
+          borderStyle: "dashed",
+          borderRadius: 5,
         }}
       >
-        <Text
+        <View
           style={{
-            color: textColor,
-            fontSize: 16,
-            fontFamily: fonts.overpassBold,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {`${getFullAmount(props.bill).toFixed(2)} ${props.bill.currency.shortName}`}
-        </Text>
-        <Text style={{ color: textColor, fontFamily: fonts.pixelify }}>
-          {moment(props.bill.date).format("DD-MM-YYYY")}
-        </Text>
+          <Text
+            style={{
+              color: textColor,
+              fontSize: 16,
+              fontFamily: fonts.overpassBold,
+            }}
+          >
+            {`${getFullAmount(props.bill).toFixed(2)} ${props.bill.currency.shortName}`}
+          </Text>
+          <Text style={{ color: textColor, fontFamily: fonts.pixelify }}>
+            {moment(props.bill.date).format("DD-MM-YYYY")}
+          </Text>
+        </View>
+        <Gap size="s" />
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 1,
+            flexWrap: "wrap",
+            columnGap: 4,
+            rowGap: 2,
+          }}
+        >
+          {uniqueCategoriesNames.map((name) => (
+            <TextTag title={name} key={name} />
+          ))}
+        </View>
       </View>
-      <Gap size="s" />
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          columnGap: 4,
-          rowGap: 2,
-        }}
-      >
-        {uniqueCategoriesNames.map((name) => (
-          <TextTag title={name} key={name} />
-        ))}
-      </View>
-    </View>
-  );
+    </Swipeable>
+  )
+}
+
+type ActionElementProps = {
+  text: string
+  color: string
+  x: number
+  progress: Animated.AnimatedInterpolation<number>
+  onPress?: () => void
+}
+const RightActionElement = (props: ActionElementProps) => {
+  const borderColor = onBgSubtleColor()
+  const trans = props.progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [props.x, 0],
+  })
+
+  return (
+    <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
+      <TouchableOpacity onPress={props.onPress} style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: props.color,
+            marginLeft: 5,
+            borderColor: borderColor,
+            borderWidth: 2,
+            borderRadius: 5,
+            borderStyle: "dashed",
+          }}
+        >
+          <Text>{props.text}</Text>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  )
 }

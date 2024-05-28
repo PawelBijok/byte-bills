@@ -3,6 +3,7 @@ import { useFonts } from "expo-font"
 import { Slot, SplashScreen, router } from "expo-router"
 import { useEffect, useMemo, useState } from "react"
 import { useColorScheme } from "react-native"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { getProfile } from "../lib/db/profile"
 import * as supabase from "../lib/supabase"
 import { DarkNavigationTheme, LightNavigationTheme, fonts } from "../lib/themes"
@@ -53,7 +54,9 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme == "dark" ? DarkNavigationTheme : LightNavigationTheme}>
-      <Slot />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Slot />
+      </GestureHandlerRootView>
     </ThemeProvider>
   )
 }
