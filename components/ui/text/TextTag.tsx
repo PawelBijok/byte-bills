@@ -1,30 +1,36 @@
-import { View, Text } from "react-native";
-import { accentColor, fonts, onAccentColor } from "../../../lib/themes";
+import { Text, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { accentColor, fonts, onAccentColor } from "../../../lib/themes"
 
 type TextTagProps = {
-  title: string;
-};
+  title: string
+  onPress?: () => void
+  size?: "sm" | "lg"
+}
 
 export default function TextTag(props: TextTagProps) {
+  const isSmall = (props.size ?? "sm") === "sm"
   return (
-    <View
-      style={{
-        backgroundColor: accentColor(),
-        paddingHorizontal: 5,
-        paddingBottom: 1,
-        paddingTop: 2,
-        borderRadius: 5,
-      }}
-    >
-      <Text
+    <TouchableOpacity onPress={props.onPress} disabled={props.onPress === undefined}>
+      <View
         style={{
-          color: onAccentColor(),
-          fontFamily: fonts.overpass,
-          fontSize: 12,
+          backgroundColor: accentColor(),
+          paddingHorizontal: isSmall ? 5 : 7,
+          paddingBottom: isSmall ? 1 : 3,
+          paddingTop: isSmall ? 2 : 4,
+          borderRadius: isSmall ? 5 : 8,
         }}
       >
-        {props.title}
-      </Text>
-    </View>
-  );
+        <Text
+          style={{
+            color: onAccentColor(),
+            fontFamily: isSmall ? fonts.overpass : fonts.overpassBold,
+            fontSize: isSmall ? 12 : 15,
+          }}
+        >
+          {props.title}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  )
 }

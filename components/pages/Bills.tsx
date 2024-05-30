@@ -1,5 +1,5 @@
 import { router } from "expo-router"
-import { useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { ActivityIndicator, Alert, FlatList, SafeAreaView, View } from "react-native"
 import { Text } from "react-native-elements"
 import { getUserBills } from "../../lib/db/bills"
@@ -22,7 +22,7 @@ export default function Bills() {
   const billsStore = useBillsStore()
   const [loading, setLoading] = useState(true)
 
-  useMemo(() => {
+  useEffect(() => {
     const getBills = async () => {
       const bills = await getUserBills(userStore.user!)
       setLoading(false)

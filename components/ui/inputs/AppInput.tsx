@@ -1,46 +1,39 @@
-import {
-  KeyboardTypeOptions,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { errorColor, isDark, okColor, onBgColor } from "../../../lib/themes";
-import { DashedSpacer } from "../spacers/DashedSpacer";
+import { KeyboardTypeOptions, StyleSheet, Text, TextInput, View } from "react-native"
+import { errorColor, isDark, okColor, onBgColor } from "../../../lib/themes"
+import { DashedSpacer } from "../spacers/DashedSpacer"
 
-export type AppInputStatus = "initial" | "ok" | "error";
+export type AppInputStatus = "initial" | "ok" | "error"
 
 type AppInputProps = {
-  value?: string;
-  onChangeText?: (value: string) => void;
-  placeholder?: string;
-  secureTextEntry?: boolean;
-  label?: string;
-  keyboardType?: KeyboardTypeOptions;
-  status?: AppInputStatus;
-  errorText?: string;
-  autoCapitalize?: "none" | "sentences" | "words" | "characters";
-  widthFraction?: number,
-};
+  value?: string
+  onChangeText?: (value: string) => void
+  placeholder?: string
+  secureTextEntry?: boolean
+  label?: string
+  keyboardType?: KeyboardTypeOptions
+  status?: AppInputStatus
+  errorText?: string
+  autoCapitalize?: "none" | "sentences" | "words" | "characters"
+  widthFraction?: number
+  inputAccessoryViewID?: string
+}
 
 export const AppInput = (props: AppInputProps) => {
-  let color = onBgColor();
+  let color = onBgColor()
   switch (props.status) {
     case "ok":
-      color = okColor();
-      break;
+      color = okColor()
+      break
     case "error":
-      color = errorColor();
-      break;
+      color = errorColor()
+      break
     case "initial" || undefined:
-      color = onBgColor();
-      break;
+      color = onBgColor()
+      break
   }
   return (
     <View style={styles.input}>
-      <Text style={{ color: color, fontFamily: "Pixelify" }}>
-        {props.label}
-      </Text>
+      <Text style={{ color: color, fontFamily: "Pixelify" }}>{props.label}</Text>
       <TextInput
         style={{
           fontSize: 20,
@@ -50,6 +43,9 @@ export const AppInput = (props: AppInputProps) => {
           color: color,
           fontFamily: "Overpass-Bold",
         }}
+        inputAccessoryViewID={props.inputAccessoryViewID}
+        autoCorrect={false}
+        spellCheck={false}
         autoCapitalize={props.autoCapitalize}
         placeholderTextColor={isDark() ? "#999" : "#888"}
         keyboardType={props.keyboardType}
@@ -66,14 +62,12 @@ export const AppInput = (props: AppInputProps) => {
         elementSpacing={8}
       />
       {props.errorText != null && props.status == "error" ? (
-        <Text style={{ color: color, fontFamily: "Overpass-Light" }}>
-          {props.errorText}
-        </Text>
+        <Text style={{ color: color, fontFamily: "Overpass-Light" }}>{props.errorText}</Text>
       ) : null}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   input: {},
-});
+})

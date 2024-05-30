@@ -7,7 +7,7 @@ import { saveBill } from "../../lib/db/bills"
 import { useBillsStore } from "../../store/BillsStore"
 import { useCurrenciesStore } from "../../store/CurrenciesStore"
 import { useUserStore } from "../../store/UserStore"
-import { Bill, Category } from "../../types/bill"
+import { Bill, Category, getMostPopularCategoriesNames } from "../../types/bill"
 import { Currency } from "../../types/currency"
 import CategoryAmountRow from "../bills/CategoryAmountRow"
 import { FilledButton } from "../ui/buttons/FilledButton"
@@ -27,6 +27,7 @@ export default function AddNewBill() {
   const currenciesStore = useCurrenciesStore()
   const userStore = useUserStore()
   const billsStore = useBillsStore()
+  const mostUsedCategoriesNames = getMostPopularCategoriesNames(billsStore.bills, 10)
   const [currencyPickerVisible, setCurrencyPickerVisible] = useState(false)
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(
     userStore.profile?.currency ?? currenciesStore.availableCurrencies![0]
@@ -125,6 +126,7 @@ export default function AddNewBill() {
               onNameChanged={(name) => updateCategoryName(item.id, name)}
               onDelete={() => deleteCategory(item.id)}
               enableDeleteButton={categories.length > 1}
+              suggestions={mostUsedCategoriesNames}
             />
           )}
           keyExtractor={(item) => item.id.toString()}
@@ -144,6 +146,7 @@ export default function AddNewBill() {
           )}
         />
       </View>
+
       <LabelButtonRow
         buttonLabel={selectedCurrency.shortName}
         label="Select currency"
