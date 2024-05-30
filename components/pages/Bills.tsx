@@ -51,13 +51,13 @@ export default function Bills() {
   ]
 
   const [month, setMonth] = useState<number>(currentMonth)
+  const [year, setYear] = useState<number>(currentYear)
+
   let bills = useBillsStore().bills.filter((bill) => {
-    return bill.date.getMonth() == month
+    return bill.date.getMonth() == month && bill.date.getFullYear() == year
   })
 
   const sum = bills.length > 0 ? bills.map((bill) => getFullAmount(bill)).reduce((s, a) => s + a) : 0
-
-  const [year, setYear] = useState<number>(currentYear)
 
   function changeMonth(next: boolean) {
     const currentMonth = month
