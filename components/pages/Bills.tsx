@@ -59,6 +59,8 @@ export default function Bills() {
 
   const sum = bills.length > 0 ? bills.map((bill) => getFullAmount(bill)).reduce((s, a) => s + a) : 0
 
+  const isSelectedCurrentYearMonth = (): boolean => currentYear === year && currentMonth === month
+
   function changeMonth(next: boolean) {
     const currentMonth = month
     const currentYear = year
@@ -141,7 +143,10 @@ export default function Bills() {
         <FilledButton
           title="Add new bill"
           onPress={() => {
-            router.push("/home/bills/new")
+            router.push({
+              pathname: "/home/bills/new",
+              params: { date: isSelectedCurrentYearMonth() ? new Date() : new Date(year, month, 1) },
+            })
           }}
           icon={{
             name: "plus",

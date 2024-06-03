@@ -23,7 +23,12 @@ type EditableCategory = {
   value: string
 }
 
-export default function AddNewBill() {
+type AddNewBillProps = {
+  date?: Date
+}
+
+export default function AddNewBill(props: AddNewBillProps) {
+  console.log(props)
   const currenciesStore = useCurrenciesStore()
   const userStore = useUserStore()
   const billsStore = useBillsStore()
@@ -32,7 +37,7 @@ export default function AddNewBill() {
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(
     userStore.profile?.currency ?? currenciesStore.availableCurrencies![0]
   )
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState(new Date(props.date ?? new Date()))
   const [datePickerVisible, setDatePickerVisible] = useState(false)
   const freshCategory = { name: "", value: "", id: "1" }
   const [categories, setCategories] = useState<EditableCategory[]>([{ ...freshCategory }])
