@@ -1,5 +1,5 @@
 import moment from "moment"
-import React from "react"
+import React, { useRef } from "react"
 import { Alert, Animated, Text, TouchableOpacity, View } from "react-native"
 import { Swipeable } from "react-native-gesture-handler"
 import { deleteBill } from "../../lib/db/bills"
@@ -21,7 +21,10 @@ export default function BillEntryItem(props: BillEntryItemProps) {
 
   const uniqueCategoriesNames: string[] = [...new Set(props.bill.categories.map((e) => e.name))]
 
+  const swipeableRef = useRef<Swipeable>()
+
   const deleteItem = async () => {
+    swipeableRef.current?.close()
     Alert.alert("Warning", "Are you sure you want to delete this bill?", [
       {
         text: "Delete",
@@ -60,11 +63,19 @@ export default function BillEntryItem(props: BillEntryItemProps) {
         flexDirection: "row",
       }}
     >
-      <RightActionElement text="Delete" color={`${error}33`} x={85} progress={progress} onPress={deleteItem} />
+      <RightActionElement
+        text="Delete"
+        color={`${error}33`}
+        x={85}
+        progress={progress}
+        onPress={() => {
+          deleteItem()
+        }}
+      />
     </View>
   )
   return (
-    <Swipeable renderRightActions={renderRightActions}>
+    <Swipeable ref={swipeableRef} renderRightActions={renderRightActions}>
       <View
         style={{
           borderColor: borderColor,
