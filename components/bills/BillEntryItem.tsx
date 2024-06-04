@@ -21,7 +21,7 @@ export default function BillEntryItem(props: BillEntryItemProps) {
 
   const uniqueCategoriesNames: string[] = [...new Set(props.bill.categories.map((e) => e.name))]
 
-  const swipeableRef = useRef<Swipeable>()
+  const swipeableRef = useRef<Swipeable | null>(null)
 
   const deleteItem = async () => {
     swipeableRef.current?.close()
